@@ -26,7 +26,7 @@ def train_q_agent(episodes=1000, num_rounds=100):
         q_agent = QLearningAgent(alpha=alpha, gamma=gamma, epsilon=epsilon)
         q_agent.reset()
         opponent = random.choice(opponents)
-        
+
         game = Game(q_agent, opponent)
 
         for _ in range(num_rounds):
@@ -35,10 +35,9 @@ def train_q_agent(episodes=1000, num_rounds=100):
             game.agent_a.update_q_values(action_b, reward_a)
             game.agent_b.update(action_a)
 
-
             result += reward_a
 
-    return game.agent_a.q_table, game.agent_a.epsilon, result/episodes
+    return game.agent_a.q_table, game.agent_a.epsilon, result / episodes
 
 
 def q_plot():
@@ -94,7 +93,7 @@ def train_deep_q_agent(
         QLearningAgent(q_table=[[5.32301959, 3.19583982], [7.32301959, 4.19583982]]),
         TitForTatOppositeAgent(),
         TwoTitsForTatAgent(),
-        ProvocativeAgent()
+        ProvocativeAgent(),
     ]
 
     all_rewards = []
@@ -160,9 +159,6 @@ if __name__ == "__main__":
         state_size=5, action_size=2, num_rounds=100, batch_size=32, episodes=100
     )
 
-
-
-
     # best_q_table = 0
     # best_epsilon = 0
     # best_result = 0
@@ -173,7 +169,6 @@ if __name__ == "__main__":
     #         best_epsilon = epsilon
     #         best_result = result
     # print(f"Best q_table: {best_q_table}, Best epsilon: {best_epsilon}, Best result: {best_result}")
-
 
     # total_reward_a, total_reward_b = game.play_iterated_game(num_rounds, batch_size)
     # print(f"Total Reward for Agent A: {total_reward_a}")

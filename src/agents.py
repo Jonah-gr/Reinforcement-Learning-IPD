@@ -14,7 +14,7 @@ class Agent:
 
     def __get_params__(self):
         return self.history, self.reward_history
-    
+
     def choose_action(self):
         pass
 
@@ -123,7 +123,7 @@ class ProvocativeAgent(Agent):
             return 0
         return 0
 
- 
+
 class TitForTatOppositeAgent(Agent):
     def __init__(self):
         super().__init__()
@@ -140,9 +140,11 @@ class QLearningAgent(Agent):
     def __init__(self, q_table=None, alpha=0.1, gamma=0.5, epsilon=0.1):
         super().__init__()
         if q_table is None:
-            self.q_table = np.zeros((2, 2)) # Q-values for (Agent_Action, Opponent_Action)
+            self.q_table = np.zeros(
+                (2, 2)
+            )  # Q-values for (Agent_Action, Opponent_Action)
         else:
-            self.q_table = np.array(q_table) # q_table should look like [[], []]
+            self.q_table = np.array(q_table)  # q_table should look like [[], []]
         self.alpha = alpha  # Learning rate
         self.gamma = gamma  # Discount factor
         self.epsilon = epsilon  # Exploration rate
