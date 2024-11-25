@@ -1,6 +1,3 @@
-from tqdm import tqdm
-
-
 class Game:
     def __init__(self, agent_a, agent_b):
         self.payoff_matrix = {
@@ -16,6 +13,10 @@ class Game:
         action_a = self.agent_a.choose_action()
         action_b = self.agent_b.choose_action()
         reward_a, reward_b = self.payoff_matrix[(action_a, action_b)]
+        self.agent_a.history.append(action_a)
+        self.agent_b.history.append(action_b)
+        self.agent_a.reward_history.append(reward_a)
+        self.agent_b.reward_history.append(reward_b)
         return action_a, action_b, reward_a, reward_b
 
     def play_iterated_game(self, num_rounds):
