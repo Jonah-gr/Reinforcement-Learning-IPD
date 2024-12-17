@@ -1,5 +1,6 @@
 from matplotlib import pyplot as plt
 from tqdm import tqdm
+from torch.utils.tensorboard import SummaryWriter
 from src.agents import *
 
 
@@ -72,47 +73,45 @@ def q_plot():
 
 def train_deep_q_agent(
     state_size=5,
-    action_size=2,
     num_rounds=100,
     batch_size=32,
     episodes=1000,
     save_path="deep_q_agent.pt",
 ):
     # Initialize the DQN agent
-    deep_q_agent = DeepQLearningAgent(state_size, action_size, load_model=False)
+    deep_q_agent = DeepQLearningAgent(state_size, load_model=False)
+
+    # TensorBoard writer
+    writer = SummaryWriter(log_dir="runs/deep_q_training")
 
     # List of opponent agents
-    opponents = [
-        AlwaysCooperateAgent(),
-        AlwaysDefectAgent(),
-        TitForTatAgent(),
-        SpitefulAgent(),
-        RandomAgent(),
-        PavlovAgent(),
-        TitForTwoTatsAgent(),
-        QLearningAgent(q_table=[[5.32301959, 3.19583982], [7.32301959, 4.19583982]]),
-        TitForTatOppositeAgent(),
-        TwoTitsForTatAgent(),
-        ProvocativeAgent(),
-    ]
+    opponents = BASIC_AGENTS
+    print(f"Total Opponents: {len(opponents)}")
 
     all_rewards = []
     highest_posssible_rewards = []
+
+    comparison_all_rewards = []
+    comparison_highest_possible_rewards = []
 
     for episode in tqdm(range(episodes), desc="Training Episodes"):
         deep_q_agent.reset()
         # Choose a random opponent for this episode
         opponent = random.choice(opponents)
         game = Game(deep_q_agent, opponent)
+        comparison_game = Game(random.choice(opponents), opponent)
 
         # Play iterated games and train
         total_reward_a = 0
         all_oponent_actions = []
 
+        comparison_total_reward = 0
+        comparison_all_opponent_actions = []
+
         # Initialize replay memory
         next_state_a = np.array([0] * state_size)
 
-        bar = tqdm(range(num_rounds))
+        bar = tqdm(range(num_rounds), leave=False)
         for _ in bar:
             action_a = game.agent_a.choose_action()
             action_b = game.agent_b.choose_action()
@@ -123,41 +122,82 @@ def train_deep_q_agent(
             game.agent_a.update(action_b)
             game.agent_b.update(action_a)
             next_state_a = np.array([game.agent_a.prev_opponent_action])
-            # print(state_a, next_state_a)
 
             # Update replay memory
             game.agent_a.remember(state_a, action_a, reward_a, next_state_a, False)
             total_reward_a += reward_a
 
             # Train the agents with replay memory
-            game.agent_a.replay(batch_size)
+            loss = game.agent_a.replay(batch_size)
 
             # Safe opponent action
             all_oponent_actions.append(action_b)
 
+            # Comparison
+            action_a = comparison_game.agent_a.choose_action()
+            action_b = comparison_game.agent_b.choose_action()
+            reward_a, _ = comparison_game.payoff_matrix[(action_a, action_b)]
+
+            # Create states for replay memory
+            comparison_game.agent_b.update(action_a)
+
+            # Update replay memory
+            comparison_total_reward += reward_a
+
+            # Safe opponent action
+            comparison_all_opponent_actions.append(action_b)
+
             bar.set_description(
                 f"Episode: {episode}/{episodes}, Score: {total_reward_a}, Opponent: {opponent.__class__.__name__}"
             )
+
+        # Log metrics to TensorBoard
+        writer.add_scalar("Loss/Episode", loss, episode)
+        writer.add_scalar("Rewards/Episode", total_reward_a, episode)
+        writer.add_scalar("Epsilon", deep_q_agent.epsilon, episode)
+        writer.add_scalar("Comparison/Rewards/Episode", comparison_total_reward, episode)
 
         all_rewards.append(total_reward_a)
         highest_posssible_rewards.append(
             all_oponent_actions.count(0) * 5 + all_oponent_actions.count(1)
         )
 
+        comparison_all_rewards.append(comparison_total_reward)
+        comparison_highest_possible_rewards.append(
+            comparison_all_opponent_actions.count(0) * 5
+            + comparison_all_opponent_actions.count(1)
+        )
+
     # Save the trained model
-    plt.plot(
-        range(episodes),
-        list(map(lambda x: x[0] / x[1], zip(all_rewards, highest_posssible_rewards))),
-    )
-    plt.show()
     torch.save(deep_q_agent.model.state_dict(), save_path)
     print(f"Trained model saved to {save_path}")
 
+    # Plot performance comparison
+    plt.plot(
+        range(episodes),
+        list(map(lambda x: x[0] / x[1], zip(all_rewards, highest_posssible_rewards))),
+        label="DeepQ",
+    )
+
+    plt.plot(
+        range(episodes),
+        list(
+            map(
+                lambda x: x[0] / x[1],
+                zip(comparison_all_rewards, comparison_highest_possible_rewards),
+            )
+        ),
+        label="Random",
+    )
+    plt.legend()
+    plt.show()
+
+    # Close TensorBoard writer
+    writer.close()
+
 
 if __name__ == "__main__":
-    train_deep_q_agent(
-        state_size=5, action_size=2, num_rounds=100, batch_size=32, episodes=100
-    )
+    train_deep_q_agent(state_size=5, num_rounds=100, batch_size=1, episodes=100)
 
     # best_q_table = 0
     # best_epsilon = 0
