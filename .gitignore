@@ -5,6 +5,13 @@ __pycache__/
 
 # PyTorch
 *.pt
+runs/
+
+# LaTeX
+*.snm
+*.out
+*.toc
+
 
 # C extensions
 *.so

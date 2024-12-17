@@ -1,0 +1,412 @@
+% Unofficial University of Cambridge Poster Template
+% https://github.com/andiac/gemini-cam
+% a fork of https://github.com/anishathalye/gemini
+% also refer to https://github.com/k4rtik/uchicago-poster
+
+\documentclass[final]{beamer}
+
+% ====================
+% Packages
+% ====================
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[size=custom,width=120,height=72,scale=1.0]{beamerposter}
+\usetheme{gemini}
+\usecolortheme{cam}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[numbers]{natbib}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{etoolbox} % for \ifnumcomp
+\usepackage{listofitems}
+\tikzset{>=latex} % for LaTeX arrow head
+\colorlet{myred}{red!80!black}
+\colorlet{myblue}{blue!80!black}
+\colorlet{mygreen}{green!60!black}
+\colorlet{mydarkred}{myred!40!black}
+\colorlet{mydarkblue}{myblue!40!black}
+\colorlet{mydarkgreen}{mygreen!40!black}
+\tikzstyle{node}=[very thick,circle,draw=myblue,minimum size=22,inner sep=0.5,outer sep=0.6]
+\tikzstyle{connect}=[->,thick,mydarkblue,shorten >=1]
+\tikzset{ % node styles, numbered for easy mapping with \nstyle
+  node 1/.style={node,mydarkgreen,draw=mygreen,fill=mygreen!25},
+  node 2/.style={node,mydarkblue,draw=myblue,fill=myblue!20},
+  node 3/.style={node,mydarkred,draw=myred,fill=myred!20},
+}
+\def\nstyle{int(\lay<\Nnodlen?min(2,\lay):3)} % map layer number onto 1, 2, or 3
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.14}
+\usepackage{anyfontsize}
+
+% ====================
+% Lengths
+% ====================
+
+% If you have N columns, choose \sepwidth and \colwidth such that
+% (N+1)*\sepwidth + N*\colwidth = \paperwidth
+\newlength{\sepwidth}
+\newlength{\colwidth}
+\setlength{\sepwidth}{0.025\paperwidth}
+\setlength{\colwidth}{0.3\paperwidth}
+
+\newcommand{\separatorcolumn}{\begin{column}{\sepwidth}\end{column}}
+
+% ====================
+% Title
+% ====================
+
+\title{Learning to Cooperate: Reinforcement Learning in the Iterated Prisoners Dilemma}
+
+\author{Jonah Gräfe}
+
+% \institute[shortinst]{\inst{1} Some Institute \samelineand \inst{2} Another Institute}
+
+% ====================
+% Footer (optional)
+% ====================
+
+\footercontent{
+  \href{https://github.com/Jonah-gr/Reinforcement-Learning-IPD}{https://github.com/Jonah-gr/Reinforcement-Learning-IPD} \hfill
+  Advances in Intelligent Systems \hfill
+  \href{jonah.graefe@study.hs-duesseldorf.de}{jonah.graefe@study.hs-duesseldorf.de}}
+% (can be left out to remove footer)
+
+% ====================
+% Logo (optional)
+% ====================
+
+% use this to include logos on the left and/or right side of the header:
+\logoright{\includegraphics[height=7cm]{logos/qr.PNG}}
+\logoleft{\includegraphics[height=7cm]{logos/HSD.png}}
+
+% ====================
+% Body
+% ====================
+
+\begin{document}
+
+\tikzset{%
+  every neuron/.style={
+    circle,
+    draw,
+    minimum size=1cm
+  },
+  neuron missing/.style={
+    draw=none, 
+    scale=4,
+    text height=0.333cm,
+    execute at begin node=\color{black}$\vdots$
+  },
+}
+
+
+% Refer to https://github.com/k4rtik/uchicago-poster
+% logo: https://www.cam.ac.uk/brand-resources/about-the-logo/logo-downloads
+% \addtobeamertemplate{headline}{}
+% {
+%     \begin{tikzpicture}[remember picture,overlay]
+%       \node [anchor=north west, inner sep=3cm] at ([xshift=0.0cm,yshift=1.0cm]current page.north west)
+%       {\includegraphics[height=4.5cm]{logos/HSD.png}}; 
+%     \end{tikzpicture}
+% }
+
+\begin{frame}[t]
+\begin{columns}[t]
+\separatorcolumn
+
+\begin{column}{\colwidth}
+
+  \begin{block}{Das iterierte Gefangenendilemma}
+
+    Das wiederholte Gefangenendilemma (Iterated Prisoner's Dilemma, IPD) ist ein klassisches Problem der Spieltheorie, 
+    das die Spannung zwischen Kooperation und Wettbewerb in wiederholten Interaktionen modelliert. In jeder Runde entscheiden sich 
+    zwei Spieler unabhängig voneinander entweder für die Kooperation (C) oder für die Defektion (D). Ihre Entscheidungen bestimmen 
+    ihre Auszahlungen auf der Grundlage einer Auszahlungsmatrix:
+
+    \begin{table}
+      \centering
+      \begin{tabular}{l r r }
+        \toprule
+        \textbf{Pleayer A/B} & \textbf{Cooperate (C)} & \textbf{Defect (D)}\\
+        \midrule
+        \textbf{Cooperate (C)} & (3, 3) & (0, 5) \\
+        \midrule
+        \textbf{Defect (D)} & (5, 0) & (1, 1) \\
+        \bottomrule
+      \end{tabular}
+      \caption{Auszahlungsmatrix}
+    \end{table}
+
+    % \begin{itemize}
+    %   \item Bei gegenseitiger Kooperation (C, C) werden beide Spieler mäßig belohnt.
+    %   \item Gegenseitige Defektion (D, D) führt zu minimalen Belohnungen für beide.
+    %   \item Ein Spieler, der abtrünnig wird, während der andere kooperiert (D, C), erhält die höchste Belohnung, aber der kooperierende 
+    %   Spieler geht leer aus.
+    % \end{itemize}
+  
+    % In der iterierten Version stehen sich die Spieler wiederholt gegenüber, so dass sich die Strategien auf der Grundlage des Verlaufs 
+    % der Aktionen des Gegners anpassen können. Diese Dynamik führt Konzepte wie Vertrauen, Vergeltung und Vergebung ein und macht das 
+    % IPD zu einem überzeugenden Rahmen für die Untersuchung von Entscheidungsfindung, sozialem Verhalten und dem Entstehen von Kooperation.
+
+  \end{block}
+
+  \begin{block}{\(Deep\) Q-Learning}
+    \textbf{Q-Learning-Agenten}
+    \begin{enumerate}
+      % \item \textbf{Zustände und Handlungen:} Die Umgebung ist in Zustände unterteilt, und für jeden Zustand kann der Agent eine Reihe 
+      % von Aktionen ausführen.
+      \item \textbf{Q-Werte:} Der Q-Wert stellt die erwartete kumulative Belohnung für das Ausführen einer Aktion in einem bestimmten 
+      Zustand und das anschließende Befolgen der optimalen Strategie dar.
+      \item \textbf{Aktualisierung:} \begin{equation*} Q(s, a)\leftarrow Q(s, a) + \alpha [r + \gamma \max_{a}Q(s', a) - Q(s, a)]
+                                      \end{equation*}
+            \begin{itemize}
+              \item $s,a,s'$: Aktueller Zustand, durchgeführte Aktion und der nächste Zustand.
+              \item $r$: Erhaltene Belohnung
+              \item $\alpha$: Lernrate 
+              \item $\gamma$ Diskontierungsfaktor
+            \end{itemize}
+      % \item \textbf{Exploration vs. Exploitation:} Der Agent wägt zwischen Exploration (Ausprobieren neuer Handlungen) und Exploitation 
+      % (Nutzung bekannter Handlungen mit hohen Q-Werten) unter Verwendung einer Epsilon-Greedy-Strategie ab.
+  \end{enumerate}
+
+  \textbf{Deep Q-Learning-Agenten}
+
+  \begin{enumerate}
+    \item \textbf{Neuronales Netz:} Bildet Zustände auf Q-Werte für alle möglichen Aktionen ab. Dies ersetzt die Q-Tabelle.
+    \item \textbf{Erfahrungswiedergabe:} Der Agent speichert vergangene Erfahrungen in einem Wiederholungspuffer.
+    \item \textbf{Training}: Minimierung des MSE zwischen vorhergesagten Q-Werten und Ziel Q-Werten mit Hilfe Adam-Optimierers
+  \end{enumerate}
+  
+  \begin{center}
+  \begin{tikzpicture}[x=5cm,y=2cm]
+    \readlist\Nnod{4,5,3,2} % array of number of nodes per layer
+    \readlist\Nstr{n,64,32,2} % array of string number of nodes per layer
+    \readlist\Cstr{x,h^{(\prev)},y} % array of coefficient symbol per layer
+    \def\yshift{0.55} % shift last node for dots
+    
+    % LOOP over LAYERS
+    \foreachitem \N \in \Nnod{
+      \def\lay{\Ncnt} % alias of index of current layer
+      \pgfmathsetmacro\prev{int(\Ncnt-1)} % number of previous layer
+      \foreach \i [evaluate={\c=int(\i==\N); \y=\N/2-\i-\c*\yshift;
+                   \x=\lay; \n=\nstyle;
+                   \index=(\i<\N?int(\i):"\Nstr[\n]");}] in {1,...,\N}{ % loop over nodes
+        % NODES
+        \node[node \n] (N\lay-\i) at (\x,\y) {$\strut\Cstr[\n]_{\index}$};
+        
+        % CONNECTIONS
+        \ifnumcomp{\lay}{>}{1}{ % connect to previous layer
+          \foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
+            \draw[white,line width=1.2,shorten >=1] (N\prev-\j) -- (N\lay-\i);
+            \draw[connect] (N\prev-\j) -- (N\lay-\i);
+          }
+          \ifnum \lay=\Nnodlen
+            \draw[connect] (N\lay-\i) --++ (0.5,0); % arrows out
+          \fi
+        }{
+          \draw[connect] (0.5,\y) -- (N\lay-\i); % arrows in
+        }
+        
+      }
+      \ifnum \lay<\Nnodlen
+        \path (N\lay-\N) --++ (0,1+\yshift) node[midway,scale=1.6] {$\vdots$}; % dots
+      \fi
+
+    }
+    
+    % LABELS
+    \node[above=0.2,align=center,mydarkgreen] at (N1-1.90) {Input\\[-0.2em]layer};
+    \node[above=0.2,align=center,mydarkblue] at (N2-1.90) {Hidden\\[-0.2em]layer};
+    \node[above=0.2,align=center,mydarkblue] at (N3-1.90) {Hidden\\[-0.2em]layer};
+    \node[above=0.2,align=center,mydarkred] at (N\Nnodlen-1.90) {Output\\[-0.2em]layer};
+    
+  \end{tikzpicture}
+  \end{center}
+  \end{block}
+
+\end{column}
+
+\separatorcolumn
+
+\begin{column}{\colwidth}
+
+  \begin{alertblock}{Hypothese \& Null-Hypothese}
+
+    Hypothese ($H_1$): \\
+    Die Q-Learning Agenten erzielen signifikant höhere Belohnungen als zufällig gewählte Strategien (klassische Agenten) im Iterierten 
+    Gefangenendilemma (Iterated Prisoner's Dilemma). Dies legt nahe, dass die Q-Learning Agenten effektiv lernt und ihre Strategien anpassen, 
+    um etablierte Agenten wie Tit-for-Tat, Always Cooperate und Always Defect zu übertreffen.
+
+    Nullhypothese ($H_0$): \\
+    Die Leistung der Q-Learning Agent unterscheideen sich nicht signifikant von der Leistung zufällig gewählter Strategien. 
+    Alle beobachteten Unterschiede bei den Belohnungen sind auf Zufall oder Rauschen in den Daten zurückzuführen und nicht auf die Lernfähigkeit 
+    der Agenten. \newline 
+
+    Um diese Hypothesen zu bewerten, führen wir strenge statistische Tests durch, um die Leistung der Q-Learning Agenten über mehrere 
+    Spiele und Gegner hinweg zu analysieren. Die Ergebnisse geben Aufschluss darüber, ob der lernbasierte Ansatz einen echten strategischen 
+    Vorteil bietet.
+
+  \end{alertblock}
+
+%   \begin{block}{Fusce aliquam magna velit}
+
+%     Et rutrum ex euismod vel. Pellentesque ultricies, velit in fermentum
+%     vestibulum, lectus nisi pretium nibh, sit amet aliquam lectus augue vel
+%     velit. Suspendisse rhoncus massa porttitor augue feugiat molestie. Sed
+%     molestie ut orci nec malesuada. Sed ultricies feugiat est fringilla
+%     posuere.
+
+% \vspace{1em}
+
+% \begin{columns}
+% \begin{column}{0.4\textwidth}
+% \begin{center}
+%       \begin{figure}
+%       \begin{tikzpicture}
+%         \begin{axis}[
+%             scale only axis,
+%             no markers,
+%             domain=0:2*pi,
+%             samples=100,
+%             axis lines=center,
+%             axis line style={-},
+%             ticks=none]
+%           \addplot[red] {sin(deg(x))};
+%           \addplot[blue] {cos(deg(x))};
+%         \end{axis}
+%       \end{tikzpicture}
+%       \caption{Another figure caption.}
+%     \end{figure}
+%    \end{center}
+% \end{column}
+% \begin{column}{0.6\textwidth}  %%<--- here
+% \justify
+% Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vel dapibus erat. Morbi quis leo congue, lobortis augue bibendum, malesuada neque. Duis ullamcorper quis orci sed consequat. Nam pellentesque ullamcorper tempor. Duis eget nulla blandit, vulputate orci vitae, ullamcorper ligula. Mauris a urna ac massa dignissim scelerisque sed et augue. Donec eget urna vitae neque elementum pellentesque et eget enim. Praesent a fermentum nibh. Nullam eu nibh neque. 
+% \end{column}
+% \end{columns}
+
+
+%   \end{block}
+
+%   \begin{block}{Nam cursus consequat egestas}
+
+%     Nulla eget sem quam. Ut aliquam volutpat nisi vestibulum convallis. Nunc a
+%     lectus et eros facilisis hendrerit eu non urna. Interdum et malesuada fames
+%     ac ante \textit{ipsum primis} in faucibus. Etiam sit amet velit eget sem
+%     euismod tristique. Praesent enim erat, porta vel mattis sed, pharetra sed
+%     ipsum. Morbi commodo condimentum massa, \textit{tempus venenatis} massa
+%     hendrerit quis. Maecenas sed porta est. Praesent mollis interdum lectus,
+%     sit amet sollicitudin risus tincidunt non.
+
+%     Etiam sit amet tempus lorem, aliquet condimentum velit. Donec et nibh
+%     consequat, sagittis ex eget, dictum orci. Etiam quis semper ante. Ut eu
+%     mauris purus. Proin nec consectetur ligula. Mauris pretium molestie
+%     ullamcorper. Integer nisi neque, aliquet et odio non, sagittis porta justo.
+
+%     \begin{itemize}
+%       \item \textbf{Sed consequat} id ante vel efficitur. Praesent congue massa
+%         sed est scelerisque, elementum mollis augue iaculis.
+%         \begin{itemize}
+%           \item In sed est finibus, vulputate
+%             nunc gravida, pulvinar lorem. In maximus nunc dolor, sed auctor eros
+%             porttitor quis.
+%           \item Fusce ornare dignissim nisi. Nam sit amet risus vel lacus
+%             tempor tincidunt eu a arcu.
+%           \item Donec rhoncus vestibulum erat, quis aliquam leo
+%             gravida egestas.
+%         \end{itemize}
+%       \item \textbf{Sed luctus, elit sit amet} dictum maximus, diam dolor
+%         faucibus purus, sed lobortis justo erat id turpis.
+%       \item \textbf{Pellentesque facilisis dolor in leo} bibendum congue.
+%         Maecenas congue finibus justo, vitae eleifend urna facilisis at.
+%     \end{itemize}
+
+%   \end{block}
+
+\end{column}
+
+\separatorcolumn
+
+\begin{column}{\colwidth}
+
+  % \begin{exampleblock}{A highlighted block containing some math}
+
+  %   A different kind of highlighted block.
+
+  %   $$
+  %   \int_{-\infty}^{\infty} e^{-x^2}\,dx = \sqrt{\pi}
+  %   $$
+
+  %   Interdum et malesuada fames $\{1, 4, 9, \ldots\}$ ac ante ipsum primis in
+  %   faucibus. Cras eleifend dolor eu nulla suscipit suscipit. Sed lobortis non
+  %   felis id vulputate.
+
+  %   \heading{A heading inside a block}
+
+  %   Praesent consectetur mi $x^2 + y^2$ metus, nec vestibulum justo viverra
+  %   nec. Proin eget nulla pretium, egestas magna aliquam, mollis neque. Vivamus
+  %   dictum $\mathbf{u}^\intercal\mathbf{v}$ sagittis odio, vel porta erat
+  %   congue sed. Maecenas ut dolor quis arcu auctor porttitor.
+
+  %   \heading{Another heading inside a block}
+
+  %   Sed augue erat, scelerisque a purus ultricies, placerat porttitor neque.
+  %   Donec $P(y \mid x)$ fermentum consectetur $\nabla_x P(y \mid x)$ sapien
+  %   sagittis egestas. Duis eget leo euismod nunc viverra imperdiet nec id
+  %   justo.
+
+  % \end{exampleblock}
+
+  % \begin{block}{Nullam vel erat at velit convallis laoreet}
+
+  %   Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+  %   inceptos himenaeos. Phasellus libero enim, gravida sed erat sit amet,
+  %   scelerisque congue diam. Fusce dapibus dui ut augue pulvinar iaculis.
+
+  %   \begin{table}
+  %     \centering
+  %     \begin{tabular}{l r r c}
+  %       \toprule
+  %       \textbf{First column} & \textbf{Second column} & \textbf{Third column} & \textbf{Fourth} \\
+  %       \midrule
+  %       Foo & 13.37 & 384,394 & $\alpha$ \\
+  %       Bar & 2.17 & 1,392 & $\beta$ \\
+  %       Baz & 3.14 & 83,742 & $\delta$ \\
+  %       Qux & 7.59 & 974 & $\gamma$ \\
+  %       \bottomrule
+  %     \end{tabular}
+  %     \caption{A table caption.}
+  %   \end{table}
+
+  %   Donec quis posuere ligula. Nunc feugiat elit a mi malesuada consequat. Sed
+  %   imperdiet augue ac nibh aliquet tristique. Aenean eu tortor vulputate,
+  %   eleifend lorem in, dictum urna. Proin auctor ante in augue tincidunt
+  %   tempor. Proin pellentesque vulputate odio, ac gravida nulla posuere
+  %   efficitur. Aenean at velit vel dolor blandit molestie. Mauris laoreet
+  %   commodo quam, non luctus nibh ullamcorper in. Class aptent taciti sociosqu
+  %   ad litora torquent per conubia nostra, per inceptos himenaeos.
+
+  %   Nulla varius finibus volutpat. Mauris molestie lorem tincidunt, iaculis
+  %   libero at, gravida ante. Phasellus at felis eu neque suscipit suscipit.
+  %   Integer ullamcorper, dui nec pretium ornare, urna dolor consequat libero,
+  %   in feugiat elit lorem euismod lacus. Pellentesque sit amet dolor mollis,
+  %   auctor urna non, tempus sem.
+
+  % \end{block}
+
+  % \begin{block}{References}
+
+  %   \nocite{*}
+  %   \footnotesize{\bibliographystyle{plainnat}\bibliography{poster}}
+
+  % \end{block}
+
+\end{column}
+
+\separatorcolumn
+\end{columns}
+\end{frame}
+
+\end{document}
