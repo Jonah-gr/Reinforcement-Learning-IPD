@@ -52,6 +52,11 @@ class TitForTatAgent(Agent):
     def update(self, opponent_action):
         self.last_opponent_action = opponent_action  # Store opponent's action
 
+    def reset(self):
+        self.last_opponent_action = 0
+        self.history = []
+        self.reward_history = []
+
 
 class SpitefulAgent(Agent):
     def __init__(self):
@@ -67,16 +72,21 @@ class SpitefulAgent(Agent):
         if opponent_action == 1:  # Last opponent defected
             self.opponent_defected = True
 
+    def reset(self):
+        self.opponent_defected = False
+        self.history = []
+        self.reward_history = []
+
 
 class PavlovAgent(Agent):
     def __init__(self):
         super().__init__()
-        self.last_action = 0
         self.last_opponent_action = 0
 
     def choose_action(self):
-        self.last_action = int(not self.last_action == self.last_opponent_action)
-        return self.last_action
+        if self.history:
+            return int(not self.history[-1] == self.last_opponent_action)
+        return 0
 
     def update(self, opponent_action):
         self.last_opponent_action = opponent_action
@@ -85,7 +95,6 @@ class PavlovAgent(Agent):
 class TitForTwoTatsAgent(Agent):
     def __init__(self):
         super().__init__()
-        self.last_action = 0
         self.last_opponent_actions = [0, 0]
 
     def choose_action(self):
@@ -97,11 +106,15 @@ class TitForTwoTatsAgent(Agent):
         self.last_opponent_actions.append(opponent_action)
         self.last_opponent_actions.pop(0)
 
+    def reset(self):
+        self.last_opponent_actions = [0, 0]
+        self.history = []
+        self.reward_history = []
+
 
 class TwoTitsForTatAgent(Agent):
     def __init__(self):
         super().__init__()
-        self.last_action = 0
         self.last_opponent_actions = [0, 0]
 
     def choose_action(self):
@@ -112,6 +125,11 @@ class TwoTitsForTatAgent(Agent):
     def update(self, opponent_action):
         self.last_opponent_actions.append(opponent_action)
         self.last_opponent_actions.pop(0)
+
+    def reset(self):
+        self.last_opponent_actions = [0, 0]
+        self.history = []
+        self.reward_history = []
 
 
 class ProvocativeAgent(Agent):
@@ -134,6 +152,129 @@ class TitForTatOppositeAgent(Agent):
 
     def update(self, opponent_action):
         self.last_opponent_action = opponent_action  # Store opponent's action
+
+    def reset(self):
+        self.last_opponent_action = 0
+        self.history = []
+        self.reward_history = []
+
+
+class AdaptiveAgent(Agent):
+    def __init__(self, memory_size=10):
+        super().__init__()
+        self.opponent_actions = deque(maxlen=memory_size)
+
+    def choose_action(self):
+        if not self.opponent_actions:  # Default to cooperation if no history
+            return 0
+        avg_action = sum(self.opponent_actions) / len(self.opponent_actions)
+        return 1 if avg_action > 0.5 else 0  # Defect if opponent defects more than 50%
+
+    def update(self, opponent_action):
+        self.opponent_actions.append(opponent_action)
+
+    def reset(self):
+        self.opponent_actions.clear()
+        self.history = []
+        self.reward_history = []
+
+
+class GenerousTitForTatAgent(Agent):
+    def __init__(self, forgiveness_prob=0.1):
+        super().__init__()
+        self.forgiveness_prob = forgiveness_prob
+        self.last_opponent_action = 0
+
+    def choose_action(self):
+        if self.last_opponent_action == 1 and random.random() < self.forgiveness_prob:
+            return 0  # Forgive with a certain probability
+        return self.last_opponent_action
+
+    def update(self, opponent_action):
+        self.last_opponent_action = opponent_action
+
+    def reset(self):
+        self.last_opponent_action = 0
+        self.history = []
+        self.reward_history = []
+
+
+class WinStayLoseShiftAgent(Agent):
+    def choose_action(self):
+        if self.reward_history:  # Default to cooperation at the start
+            if self.reward_history[-1] > 0:  # Stay if last reward was positive
+                return self.history[-1]
+            else:  # Shift otherwise
+                return 1 - self.history[-1]
+        return 0
+
+
+class SuspiciousTitForTatAgent(Agent):
+    def __init__(self):
+        super().__init__()
+        self.last_opponent_action = 1  # Start by defecting
+
+    def choose_action(self):
+        return self.last_opponent_action
+
+    def update(self, opponent_action):
+        self.last_opponent_action = opponent_action
+
+    def reset(self):
+        self.last_opponent_action = 1
+        self.history = []
+        self.reward_history = []
+
+
+class GradualAgent(Agent):
+    def __init__(self):
+        super().__init__()
+        self.retaliation_count = 0
+        self.forgiveness = False
+
+    def choose_action(self):
+        if self.retaliation_count > 0:
+            self.retaliation_count -= 1
+            return 1  # Retaliate
+        elif self.forgiveness:
+            self.forgiveness = False
+            return 0  # Forgive
+        return 0  # Cooperate by default
+
+    def update(self, opponent_action):
+        if opponent_action == 1:
+            self.retaliation_count += (
+                1  # Add one round of retaliation for each defection
+            )
+            self.forgiveness = True  # Forgive after retaliating
+
+    def reset(self):
+        self.retaliation_count = 0
+        self.forgiveness = False
+        self.history = []
+        self.reward_history = []
+
+
+class SoftMajorityAgent(Agent):
+    def __init__(self):
+        super().__init__()
+        self.opponent_cooperation = 0
+        self.opponent_defection = 0
+
+    def choose_action(self):
+        return 0 if self.opponent_cooperation >= self.opponent_defection else 1
+
+    def update(self, opponent_action):
+        if opponent_action == 0:
+            self.opponent_cooperation += 1
+        else:
+            self.opponent_defection += 1
+
+    def reset(self):
+        self.opponent_cooperation = 0
+        self.opponent_defection = 0
+        self.history = []
+        self.reward_history = []
 
 
 class QLearningAgent(Agent):
@@ -177,11 +318,11 @@ class QLearningAgent(Agent):
 
 
 class DeepQNetwork(nn.Module):
-    def __init__(self, input_size, output_size):
+    def __init__(self, input_size):
         super(DeepQNetwork, self).__init__()
-        self.fc1 = nn.Linear(input_size, 24)
-        self.fc2 = nn.Linear(24, 24)
-        self.fc3 = nn.Linear(24, output_size)
+        self.fc1 = nn.Linear(input_size, 64)
+        self.fc2 = nn.Linear(64, 32)
+        self.fc3 = nn.Linear(32, 2)
 
     def forward(self, x):
         x = torch.relu(self.fc1(x))
@@ -193,8 +334,7 @@ class DeepQNetwork(nn.Module):
 class DeepQLearningAgent(Agent):
     def __init__(
         self,
-        state_size=5,
-        action_size=2,
+        state_size=10,
         gamma=0.95,
         epsilon=1.0,
         epsilon_min=0.01,
@@ -204,7 +344,6 @@ class DeepQLearningAgent(Agent):
     ):
         super().__init__()
         self.state_size = state_size
-        self.action_size = action_size
         self.memory = deque(maxlen=2000)  # Replay memory
         self.gamma = gamma  # Discount factor
         self.epsilon = epsilon  # Exploration rate
@@ -212,7 +351,7 @@ class DeepQLearningAgent(Agent):
         self.epsilon_decay = epsilon_decay  # Exploration decay rate
 
         # Neural network and optimizer
-        self.model = DeepQNetwork(state_size, action_size)
+        self.model = DeepQNetwork(state_size)
         self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         self.loss_fn = nn.MSELoss()
 
@@ -228,7 +367,7 @@ class DeepQLearningAgent(Agent):
 
     def act(self, state):
         if random.random() <= self.epsilon:  # Exploration
-            return random.randrange(self.action_size)
+            return random.choice([0, 1])
         state = torch.FloatTensor(state)
         # print(state.shape)
         with torch.no_grad():
@@ -262,11 +401,19 @@ class DeepQLearningAgent(Agent):
 
             if self.epsilon > self.epsilon_min:
                 self.epsilon *= self.epsilon_decay
+            return loss
 
     def update(self, opponent_action):
-        self.prev_opponent_action = self.prev_opponent_action[1:] + [
-            opponent_action
-        ]  # Shift the buffer and add the new opponent_action
+        try:
+            self.prev_opponent_action = self.prev_opponent_action[2:] + [
+                self.history[-1],
+                opponent_action,
+            ]  # Shift the buffer and add the new opponent_action
+        except:
+            self.prev_opponent_action = self.prev_opponent_action[2:] + [
+                self.prev_opponent_action[-2],
+                opponent_action,
+            ]
 
     def choose_action(self):
         # State is based on the opponent's previous action
@@ -274,9 +421,36 @@ class DeepQLearningAgent(Agent):
         return self.act(state)
 
 
+ALL_AGENTS = [
+    RandomAgent(),
+    QLearningAgent(),
+    TitForTatAgent(),
+    AlwaysCooperateAgent(),
+    AlwaysDefectAgent(),
+    PavlovAgent(),
+    TitForTatOppositeAgent(),
+    TwoTitsForTatAgent(),    
+    DeepQLearningAgent(load_model=False),
+    SpitefulAgent(),
+    ProvocativeAgent(),
+    TitForTwoTatsAgent(),
+    GradualAgent(),
+    SuspiciousTitForTatAgent(),
+    WinStayLoseShiftAgent(),
+    GenerousTitForTatAgent(),
+    AdaptiveAgent(),
+    SoftMajorityAgent(),
+]
+
+BASIC_AGENTS = [agent for agent in ALL_AGENTS if "QLearning" not in agent.__class__.__name__]
+
 if __name__ == "__main__":
-    q_agent = DeepQLearningAgent()
-    game = Game(q_agent, RandomAgent())
-    a, b = game.play_iterated_game(100)
-    print(a, b)
+    # q_agent = DeepQLearningAgent()
+    # game = Game(SpitefulAgent(), AlwaysCooperateAgent())
+    # a, b = game.play_iterated_game(100)
+    # print(a, b)
+    print(len(ALL_AGENTS))
+    print(len(BASIC_AGENTS))
+    
+
     # print(q_agent.train_multiple_agents())
