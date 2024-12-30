@@ -118,10 +118,10 @@ def train_deep_q_agent(
             reward_a, _ = game.payoff_matrix[(action_a, action_b)]
 
             # Create states for replay memory
-            state_a = np.array([game.agent_a.prev_opponent_action])
+            state_a = np.array([game.agent_a.prev_actions])
             game.agent_a.update(action_b)
             game.agent_b.update(action_a)
-            next_state_a = np.array([game.agent_a.prev_opponent_action])
+            next_state_a = np.array([game.agent_a.prev_actions])
 
             # Update replay memory
             game.agent_a.remember(state_a, action_a, reward_a, next_state_a, False)
@@ -152,10 +152,11 @@ def train_deep_q_agent(
             )
 
         # Log metrics to TensorBoard
+
         writer.add_scalar("Loss/Episode", loss, episode)
-        writer.add_scalar("Rewards/Episode", total_reward_a, episode)
+        writer.add_scalars("Rewards/Episode", {"DeepQ": total_reward_a, "Random": comparison_total_reward}, episode)
         writer.add_scalar("Epsilon", deep_q_agent.epsilon, episode)
-        writer.add_scalar("Comparison/Rewards/Episode", comparison_total_reward, episode)
+        writer.add_scalar("Temparature", deep_q_agent.temperature, episode)
 
         all_rewards.append(total_reward_a)
         highest_posssible_rewards.append(
@@ -197,7 +198,7 @@ def train_deep_q_agent(
 
 
 if __name__ == "__main__":
-    train_deep_q_agent(state_size=5, num_rounds=100, batch_size=1, episodes=100)
+    train_deep_q_agent(state_size=5, num_rounds=100, batch_size=100, episodes=100, save_path="deep_q_100.pt")
 
     # best_q_table = 0
     # best_epsilon = 0

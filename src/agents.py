@@ -352,27 +352,40 @@ class DeepQLearningAgent(Agent):
 
         # Neural network and optimizer
         self.model = DeepQNetwork(state_size)
+        if torch.cuda.is_available:
+            self.model.to("cuda")
         self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
-        self.loss_fn = nn.MSELoss()
+        self.loss_fn = nn.SmoothL1Loss()
 
+        self.temperature = 1.0
         if load_model:
             self.model.load_state_dict(torch.load("deep_q_agent.pt"))
             self.model.eval()
+            self.temperature = 0.0
+        
 
         # Initialize with default state
-        self.prev_opponent_action = [0] * state_size
+        self.prev_actions = [0] * state_size
 
     def remember(self, state, action, reward, next_state, done):
         self.memory.append((state, action, reward, next_state, done))
 
-    def act(self, state):
-        if random.random() <= self.epsilon:  # Exploration
-            return random.choice([0, 1])
+    def act(self, state, temperature=1.0):
         state = torch.FloatTensor(state)
-        # print(state.shape)
+
         with torch.no_grad():
-            q_values = self.model(state)
-        return torch.argmax(q_values).item()  # Exploitation
+            q_values = self.model(state)  # Predicted Q-values for actions
+        if temperature > 0.0:
+            # Boltzmann sampling for exploration
+            probabilities = torch.softmax(q_values / temperature, dim=0)  # Compute probabilities
+            action = torch.multinomial(probabilities, 1).item()  # Sample action
+        else:
+            # Greedy selection for exploitation
+            action = torch.argmax(q_values).item()
+
+        return action
+
+        
 
     def replay(self, batch_size):
         if len(self.memory) < batch_size:
@@ -399,26 +412,26 @@ class DeepQLearningAgent(Agent):
             loss.backward()
             self.optimizer.step()
 
-            if self.epsilon > self.epsilon_min:
-                self.epsilon *= self.epsilon_decay
-            return loss
+        if self.epsilon > self.epsilon_min:
+            self.epsilon *= self.epsilon_decay
+        self.temperature = max(0.1, self.temperature * 0.995) 
+        return loss
 
     def update(self, opponent_action):
-        try:
-            self.prev_opponent_action = self.prev_opponent_action[2:] + [
+        if len(self.history) >= 2:
+            self.prev_actions = self.prev_actions[2:] + [
                 self.history[-1],
                 opponent_action,
-            ]  # Shift the buffer and add the new opponent_action
-        except:
-            self.prev_opponent_action = self.prev_opponent_action[2:] + [
-                self.prev_opponent_action[-2],
+            ]
+        else:
+            self.prev_actions = self.prev_actions[2:] + [
+                self.prev_actions[-2],
                 opponent_action,
             ]
 
     def choose_action(self):
-        # State is based on the opponent's previous action
-        state = np.array([[self.prev_opponent_action]])
-        return self.act(state)
+        state = np.array(self.prev_actions)
+        return self.act(state, temperature=self.temperature)
 
 
 ALL_AGENTS = [
