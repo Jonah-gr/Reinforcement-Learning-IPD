@@ -19,7 +19,9 @@ class Game:
         self.agent_a.reward_history.append(reward_a)
         self.agent_b.reward_history.append(reward_b)
         if self.verbose >= 2:
-            print(f"{self.agent_a.__class__.__name__}: {action_a}, {self.agent_b.__class__.__name__}: {action_b} --> ({reward_a, reward_b}) ")
+            print(
+                f"{self.agent_a.__class__.__name__}: {action_a}, {self.agent_b.__class__.__name__}: {action_b} --> ({reward_a, reward_b}) "
+            )
         return action_a, action_b, reward_a, reward_b
 
     def play_iterated_game(self, num_rounds):
@@ -32,11 +34,19 @@ class Game:
             total_reward_a += reward_a
             total_reward_b += reward_b
         if self.verbose >= 1:
-            print(f"{self.agent_a.__class__.__name__}: {self.agent_a.history} --> {self.agent_a.reward_history}\n{self.agent_b.__class__.__name__}: {self.agent_b.history} --> {self.agent_b.reward_history}")
+            print(
+                f"{self.agent_a.__class__.__name__}: {self.agent_a.history} --> {self.agent_a.reward_history}\n{self.agent_b.__class__.__name__}: {self.agent_b.history} --> {self.agent_b.reward_history}"
+            )
             if total_reward_a > total_reward_b:
-                print(f"{self.agent_a.__class__.__name__} wins against {self.agent_b.__class__.__name__} with {total_reward_a} to {total_reward_b}.")
+                print(
+                    f"{self.agent_a.__class__.__name__} wins against {self.agent_b.__class__.__name__} with {total_reward_a} to {total_reward_b}."
+                )
             elif total_reward_a < total_reward_b:
-                print(f"{self.agent_b.__class__.__name__} wins against {self.agent_a.__class__.__name__} with {total_reward_b} to {total_reward_a}.")
+                print(
+                    f"{self.agent_b.__class__.__name__} wins against {self.agent_a.__class__.__name__} with {total_reward_b} to {total_reward_a}."
+                )
             else:
-                print(f"{self.agent_a.__class__.__name__} ties against {self.agent_b.__class__.__name__} with {total_reward_a} to {total_reward_b}.")
+                print(
+                    f"{self.agent_a.__class__.__name__} ties against {self.agent_b.__class__.__name__} with {total_reward_a} to {total_reward_b}."
+                )
         return total_reward_a, total_reward_b
