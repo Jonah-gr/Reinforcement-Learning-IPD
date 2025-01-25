@@ -2,23 +2,27 @@
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.packages.find]
+where = ["."]  # list of folders that contain the packages (["."] by default)
+include = ["src", "app"]  # package names should match these glob patterns (["*"] by default)
+exclude = []  # exclude packages matching these glob patterns (empty by default)
+namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
+
 [project]
-name = "Reinforcement-Learning-IPD"
-version = "0.1.0"
-description = "This project explores the Iterated Prisoner's Dilemma (IPD) using Reinforcement Learning."
-readme = "README.md"
-requires-python = ">=3.8"
-license = {text = "MIT"}
 authors = [
-    {name = "Jonah Gräfe", email = "jonah.graefe@gmail.com"},
+    { name = "Jonah Gräfe", email = "jonah.graefe@study.hs-duesseldorf.de" },
 ]
 classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
 "pytest >= 7.0",
@@ -28,10 +32,13 @@ dependencies = [
 "tqdm >= 4.65.0"
 ]
 
+name = "Reinforcement-Learning-IPD"
+version = "0.1.0"
+description = "This project explores the Iterated Prisoner's Dilemma (IPD) using Reinforcement Learning."
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
 
-[tool.setuptools]
-packages = ["Reinforcement-Learning-IPD"]  # Replace with the name of your main package
-include_package_data = true  # Includes files specified in MANIFEST.in
 
 [tool.pip-requirements]
 # Optional: Specify a requirements file
@@ -40,3 +47,34 @@ requirements-file = "requirements.txt"
 [tool.pip-requirements.dev]
 # Optional: Specify additional dev dependencies
 requirements-file = "dev-requirements.txt"
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "flake8",
+    "isort",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+]
+publishing = [
+    "build",
+    "twine",
+    "wheel",
+]
+
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+)/
+'''
+
+[tool.isort]
+profile = "black"
+known_first_party = "ant_search_algorithm"
+packages = ["python_ant_search_algorithm"]
+src_paths = ["ant_search_algorithm", "tests"]
+line_length = "100"
