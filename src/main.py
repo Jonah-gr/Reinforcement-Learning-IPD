@@ -1,7 +1,6 @@
 from src.train import *
 from src.tournament import Tournament
 from src.game import Game
-from app.app import app
 import argparse
 import ast
 import webbrowser
@@ -169,6 +168,7 @@ def main():
         tournament.save_results(args.save_dir)
 
     elif args.command == "app":
+        from app.app import app
         webbrowser.open("http://127.0.0.1:5000")
         app.run(args.debug)
 
