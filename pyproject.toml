@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Reinforcement-Learning-IPD"
+version = "0.1.0"
+description = "This project explores the Iterated Prisoner's Dilemma (IPD) using Reinforcement Learning."
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Jonah Gräfe", email = "jonah.graefe@gmail.com"},
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+
+[project.dependencies]
+# List your project dependencies here
+# Example:
+pytest = "^7.0"
+numpy = "^1.21"
+torch = "^2.1.0"
+pandas = "^2.2.0"
+tqdm = "^4.65.0"
+
+
+[tool.setuptools]
+packages = ["Reinforcement-Learning-IPD"]  # Replace with the name of your main package
+include_package_data = true  # Includes files specified in MANIFEST.in
+
+[tool.pip-requirements]
+# Optional: Specify a requirements file
+requirements-file = "requirements.txt"
+
+[tool.pip-requirements.dev]
+# Optional: Specify additional dev dependencies
+requirements-file = "dev-requirements.txt"
