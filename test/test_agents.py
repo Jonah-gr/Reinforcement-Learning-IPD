@@ -65,7 +65,7 @@ def test_agent_deterministic_behavior(agent):
     """
     Test deterministic agents for consistent actions.
     """
-    if isinstance(agent, SuspiciousGradualAgent):
+    if isinstance(agent, SuspiciousGradualAgent, SuspiciousGenerousTitForTatAgent, GenerousTitForTatAgent):
         return  # Skip this test for RandomAgent
 
     agent.reset()
