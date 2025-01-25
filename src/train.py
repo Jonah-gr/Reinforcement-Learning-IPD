@@ -10,6 +10,22 @@ def train(
     episodes=1000,
     log_dir="runs/training",
 ):
+    """
+    Train a list of agents against randomly selected opponent agents over multiple episodes.
+
+    Args:
+        agents (list): A list of agents to be trained.
+        num_rounds (int, optional): Number of rounds to be played in each episode. Default is 100.
+        episodes (int, optional): Number of episodes for training each agent. Default is 1000.
+        log_dir (str, optional): Directory path for storing TensorBoard logs. Default is "runs/training".
+
+    The function initializes a TensorBoard writer for logging training metrics.
+    For each agent, it selects random opponents from BASIC_AGENTS and plays a specified number of episodes.
+    During each episode, rewards and losses are tracked and logged.
+    The function handles training for agents with class names "DeepQLearningAgent" and "QLearningAgent",
+    including updating their models and Q-values respectively.
+    Trained models for DeepQLearningAgent are saved to disk. TensorBoard writer is closed after completion.
+    """
     # TensorBoard writer
     if os.path.exists(log_dir):
         counter = 1

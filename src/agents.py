@@ -54,7 +54,7 @@ class User(Agent):
         """
         action = int(input("Enter your action (0 or 1): "))
         return action
-    
+
 
 class RandomAgent(Agent):
     def choose_action(self):
@@ -148,7 +148,7 @@ class SpitefulAgent(Agent):
         int
             The chosen action, either 0 (cooperate) or 1 (defect).
         """
-        
+
         if self.opponent_defected:
             return 1  # Defects if opponent defected once
         return 0  # Cooperates
@@ -438,7 +438,7 @@ class SuspiciousAdaptiveAgent(Agent):
 
         This function implements a suspicious adaptive strategy, where the agent
         defects if the opponent cooperates more than 50% of the time and
-        cooperates if the opponent defects more than 50% of the time. The agent 
+        cooperates if the opponent defects more than 50% of the time. The agent
         starts by defecting.
 
         Returns

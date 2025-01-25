@@ -29,6 +29,18 @@ class Tournament:
         self.results = pd.DataFrame(columns=columns)
 
     def play_tournament(self):
+        """
+        Play a tournament with all agents in self.agents against each other agent in
+        BASIC_AGENTS.
+
+        For each pair of agents, play self.num_games games and record the total reward
+        for each agent in the self.results DataFrame. If self.include_params is True,
+        also record the parameters of each agent in the DataFrame.
+
+        Returns
+        -------
+        None
+        """
         index = 0
         for agent_a in tqdm(self.agents):
             for agent_b in BASIC_AGENTS:
@@ -80,6 +92,4 @@ if __name__ == "__main__":
     tournament = Tournament(agents, num_games=100, num_rounds=100)
     tournament.play_tournament()
     tournament.print_summary()
-    tournament.save_results(
-        "C://Users/jonah/OneDrive - Hochschule Düsseldorf/tournament_results.csv"
-    )
+    tournament.save_results("tournament_results.csv")

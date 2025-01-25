@@ -22,6 +22,7 @@ deep_q_agent = DeepQLearningAgent(state_size=20, path="deepq_result.pt")
 web_user = WebUser()
 game = Game(deep_q_agent, web_user)
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -33,7 +34,7 @@ def start_game():
     num_rounds = data["rounds"]
     # game.agent_a = DeepQLearningAgent(state_size=20, path="deepq_result.pt")
     game.agent_a.reset()
-    game.agent_a.prev_actions =  [1, 0] * 5 +[0] * 10 
+    game.agent_a.prev_actions = [1, 0] * 5 + [0] * 10
     game.agent_b.reset()
     game_state = {
         "rounds": num_rounds,

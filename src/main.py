@@ -6,13 +6,16 @@ import argparse
 import ast
 import webbrowser
 
+
 def create_object_from_string(input_string):
     # Parse the string to an AST node
     try:
-        expr = ast.parse(input_string, mode='eval')
+        expr = ast.parse(input_string, mode="eval")
 
         if not isinstance(expr.body, ast.Call):
-            raise ValueError("Input must be a call expression, e.g., ClassName(arg=value)")
+            raise ValueError(
+                "Input must be a call expression, e.g., ClassName(arg=value)"
+            )
 
         func_name = expr.body.func.id
 
@@ -139,9 +142,11 @@ def main():
             print("Available agents:", ", ".join(agent_classes.keys()))
             return
 
-    if args.command == "game":        
+    if args.command == "game":
         game = Game(args.agents[0], args.agents[1], verbose=args.verbose)
-        print(f"Starting game between {args.agents[0].__class__.__name__} and {args.agents[1].__class__.__name__} for {args.num_rounds} rounds...")
+        print(
+            f"Starting game between {args.agents[0].__class__.__name__} and {args.agents[1].__class__.__name__} for {args.num_rounds} rounds..."
+        )
         game.play_iterated_game(num_rounds=args.num_rounds)
 
     elif args.command == "train":
@@ -158,7 +163,7 @@ def main():
             num_games=args.num_games,
             num_rounds=args.num_rounds,
             inlcude_params=args.include_params,
-        )    
+        )
         tournament.play_tournament()
         tournament.print_summary()
         tournament.save_results(args.save_dir)
@@ -166,7 +171,7 @@ def main():
     elif args.command == "app":
         webbrowser.open("http://127.0.0.1:5000")
         app.run(args.debug)
-        
+
 
 if __name__ == "__main__":
     main()
