@@ -514,7 +514,10 @@ class SuspiciousGenerousTitForTatAgent(Agent):
             The chosen action, either 0 (cooperate) or 1 (defect).
         """
         if self.last_opponent_action == 1 and random.random() < self.forgiveness_prob:
-            return 0  # Forgive with a certain probability
+            if self.history:
+                return 0  # Forgive with a certain probability
+            else:
+                return 1
         return self.last_opponent_action
 
     def update(self, opponent_action):
