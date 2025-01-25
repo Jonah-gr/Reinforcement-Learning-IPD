@@ -1,8 +1,10 @@
 from src.train import *
 from src.tournament import Tournament
 from src.game import Game
+from app.app import app
 import argparse
 import ast
+import webbrowser
 
 def create_object_from_string(input_string):
     # Parse the string to an AST node
@@ -116,16 +118,26 @@ def main():
         help="Specify the directory to save results",
     )
 
+    # Subcommand for app
+    app_parser = subparsers.add_parser("app", help="Run the app")
+    app_parser.add_argument(
+        "--debug",
+        type=bool,
+        default=False,
+        help="Run the app in debug mode",
+    )
+
     args = parser.parse_args()
 
-    agent_classes = {cls.__class__.__name__: cls for cls in ALL_AGENTS}
-    try:
-        for i in range(len(args.agents)):
-            args.agents[i] = create_object_from_string(args.agents[i])
-    except Exception as e:
-        print(f"Error: Failed to initialize agents. {e}")
-        print("Available agents:", ", ".join(agent_classes.keys()))
-        return
+    if args.command != "app":
+        agent_classes = {cls.__class__.__name__: cls for cls in ALL_AGENTS}
+        try:
+            for i in range(len(args.agents)):
+                args.agents[i] = create_object_from_string(args.agents[i])
+        except Exception as e:
+            print(f"Error: Failed to initialize agents. {e}")
+            print("Available agents:", ", ".join(agent_classes.keys()))
+            return
 
     if args.command == "game":        
         game = Game(args.agents[0], args.agents[1], verbose=args.verbose)
@@ -150,6 +162,11 @@ def main():
         tournament.play_tournament()
         tournament.print_summary()
         tournament.save_results(args.save_dir)
+
+    elif args.command == "app":
+        webbrowser.open("http://127.0.0.1:5000")
+        app.run(args.debug)
+        
 
 if __name__ == "__main__":
     main()
