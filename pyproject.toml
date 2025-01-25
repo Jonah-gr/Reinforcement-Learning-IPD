@@ -29,7 +29,8 @@ dependencies = [
 "numpy >= 1.21",
 "torch >= 2.1.0",
 "pandas >= 2.0.0",
-"tqdm >= 4.65.0"
+"tqdm >= 4.65.0",
+"tensorboard >= 2.13.0",
 ]
 
 name = "Reinforcement-Learning-IPD"
