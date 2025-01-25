@@ -42,6 +42,20 @@ class Agent:
         self.reward_history = []
 
 
+class User(Agent):
+    def choose_action(self):
+        """
+        Choose an action based on user input.
+
+        Returns
+        -------
+        action : int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
+        action = int(input("Enter your action (0 or 1): "))
+        return action
+    
+
 class RandomAgent(Agent):
     def choose_action(self):
         """
@@ -123,6 +137,18 @@ class SpitefulAgent(Agent):
         self.opponent_defected = False  # Start by cooperating
 
     def choose_action(self):
+        """
+        Choose an action based on the agent's policy.
+
+        This function implements the Spiteful strategy, where the agent
+        cooperates until the opponent defects, and then defects from then on.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
+        
         if self.opponent_defected:
             return 1  # Defects if opponent defected once
         return 0  # Cooperates
@@ -169,6 +195,18 @@ class SuspiciousPavlovAgent(Agent):
         self.last_opponent_action = 1
 
     def choose_action(self):
+        """
+        Choose an action based on the agent's policy.
+
+        For SuspiciousPavlovAgent, this function uses the Pavlov strategy, where the
+        agent cooperates if the last actions were the same, and defects if
+        the last actions were different. The agent starts by cooperating.
+
+        Returns
+        -------
+        action : int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         if self.history:
             return int(not (self.history[-1] == self.last_opponent_action))
         return 0
@@ -183,6 +221,18 @@ class TitForTwoTatsAgent(Agent):
         self.last_opponent_actions = [0, 0]
 
     def choose_action(self):
+        """
+        Decide the next action based on the opponent's last two actions.
+
+        Implements the Tit for Two Tats strategy, where the agent defects
+        only if the opponent has defected in the last two consecutive rounds.
+        Otherwise, the agent cooperates.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         if self.last_opponent_actions == [1, 1]:  # Last opponent defects twice
             return 1
         return 0
@@ -203,6 +253,18 @@ class SuspiciousTitForTwoTatsAgent(Agent):
         self.last_opponent_actions = [1, 1]
 
     def choose_action(self):
+        """
+        Decide the next action based on the opponent's last two actions.
+
+        Implements the Suspicious Tit for Two Tats strategy, where the agent
+        defects only if the opponent has defected in the last two consecutive
+        rounds. Otherwise, the agent cooperates. The agent starts by defecting.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         if self.last_opponent_actions == [1, 1]:  # Last opponent defects twice
             return 1
         return 0
@@ -223,6 +285,18 @@ class TwoTitsForTatAgent(Agent):
         self.last_opponent_actions = [0, 0]
 
     def choose_action(self):
+        """
+        Decide the next action based on the opponent's last two actions.
+
+        Implements the Two Tits for Tat strategy, where the agent
+        defects only if the opponent has defected in at least one of
+        the last two consecutive rounds. Otherwise, the agent cooperates.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         if 1 in self.last_opponent_actions:
             return 1
         return 0
@@ -243,6 +317,19 @@ class SuspiciousTwoTitsForTatAgent(Agent):
         self.last_opponent_actions = [1, 1]
 
     def choose_action(self):
+        """
+        Decide the next action based on the opponent's last two actions.
+
+        Implements the Suspicious Two Tits for Tat strategy, where the agent
+        defects only if the opponent has defected in at least one of
+        the last two consecutive rounds. Otherwise, the agent cooperates.
+        The agent starts by defecting.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         if 1 in self.last_opponent_actions:
             return 1
         return 0
@@ -259,6 +346,17 @@ class SuspiciousTwoTitsForTatAgent(Agent):
 
 class ProvocativeAgent(Agent):
     def choose_action(self):
+        """
+        Decide the next action based on the agent's own previous actions.
+
+        The Provocative Agent defects if the agent has cooperated in the last two
+        rounds, otherwise the agent cooperates.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         try:
             if self.history[-1] == 0 and self.history[-2] == 0:
                 return 1
@@ -273,6 +371,19 @@ class TitForTatOppositeAgent(Agent):
         self.last_opponent_action = 0  # Start by cooperating
 
     def choose_action(self):
+        """
+        Decide the next action based on the opponent's last action.
+
+        This function implements the Tit for Tat Opposite strategy, where the agent
+        simply copies the opponent's last action. If the opponent cooperated in the
+        last round, the agent will defect; if the opponent defected, the agent will
+        cooperate.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         return int(not self.last_opponent_action)  # Copy the opponent's last action
 
     def update(self, opponent_action):
@@ -322,6 +433,19 @@ class SuspiciousAdaptiveAgent(Agent):
         self.opponent_actions = deque(maxlen=memory_size)
 
     def choose_action(self):
+        """
+        Choose an action based on the agent's policy.
+
+        This function implements a suspicious adaptive strategy, where the agent
+        defects if the opponent cooperates more than 50% of the time and
+        cooperates if the opponent defects more than 50% of the time. The agent 
+        starts by defecting.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         if not self.opponent_actions:  # Default to cooperation if no history
             return 1
         avg_action = sum(self.opponent_actions) / len(self.opponent_actions)
@@ -343,6 +467,19 @@ class GenerousTitForTatAgent(Agent):
         self.last_opponent_action = 0
 
     def choose_action(self):
+        """
+        Choose an action based on the agent's policy.
+
+        This function implements a generous Tit-For-Tat strategy, where the
+        agent cooperates if the opponent cooperated, defects if the opponent
+        defected, and forgives (cooperates) with a certain probability if the
+        opponent defected.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         if self.last_opponent_action == 1 and random.random() < self.forgiveness_prob:
             return 0  # Forgive with a certain probability
         return self.last_opponent_action
@@ -363,6 +500,19 @@ class SuspiciousGenerousTitForTatAgent(Agent):
         self.last_opponent_action = 1
 
     def choose_action(self):
+        """
+        Choose an action based on the agent's policy.
+
+        This function implements a suspicious generous Tit-For-Tat strategy, where the
+        agent cooperates if the opponent cooperated, defects if the opponent defected,
+        and forgives (cooperates) with a certain probability if the opponent defected.
+        The agent starts by defecting.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         if self.last_opponent_action == 1 and random.random() < self.forgiveness_prob:
             return 0  # Forgive with a certain probability
         return self.last_opponent_action
@@ -402,6 +552,18 @@ class WinStayLoseShiftAgent(Agent):
 
 class SuspiciousWinStayLoseShiftAgent(Agent):
     def choose_action(self):
+        """
+        Choose an action based on the agent's policy.
+
+        For SuspiciousWinStayLoseShiftAgent, this function implements a strategy
+        where the agent stays with the last action if the last reward was positive,
+        and shifts to the other action otherwise. The agent starts by defecting.
+
+        Returns
+        -------
+        action : int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         if self.reward_history:  # Default to cooperation at the start
             if self.reward_history[-1] > 1:  # Stay if last reward was positive
                 return self.history[-1]
@@ -416,6 +578,18 @@ class SuspiciousTitForTatAgent(Agent):
         self.last_opponent_action = 1  # Start by defecting
 
     def choose_action(self):
+        """
+        Choose an action based on the agent's policy.
+
+        For SuspiciousTitForTatAgent, this function implements a strategy
+        where the agent simply copies the opponent's last action, starting
+        by defecting.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         return self.last_opponent_action
 
     def update(self, opponent_action):
@@ -475,6 +649,18 @@ class SuspiciousGradualAgent(Agent):
         self.forgiveness = False
 
     def choose_action(self):
+        """
+        Choose an action based on the agent's policy.
+
+        This function implements the SuspiciousGradual strategy, where the agent
+        starts by defecting and then gradually increases its retaliation count
+        when the opponent defects and forgives after retaliating.
+
+        Returns
+        -------
+        action : int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         if self.retaliation_count > 0:
             self.retaliation_count -= 1
             return 1  # Retaliate
@@ -504,6 +690,17 @@ class SoftMajorityAgent(Agent):
         self.opponent_defection = 0
 
     def choose_action(self):
+        """
+        Decide the next action based on the opponent's cooperation and defection count.
+
+        Implements a strategy where the agent cooperates if the opponent has cooperated
+        at least as many times as they have defected. Otherwise, the agent defects.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         return 0 if self.opponent_cooperation >= self.opponent_defection else 1
 
     def update(self, opponent_action):
@@ -526,6 +723,18 @@ class SuspiciousSoftMajorityAgent(Agent):
         self.opponent_defection = 1
 
     def choose_action(self):
+        """
+        Decide the next action based on the opponent's cooperation and defection count.
+
+        Implements a strategy where the agent cooperates if the opponent has cooperated
+        at least as many times as they have defected. Otherwise, the agent defects.
+        The agent starts by defecting.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         return 0 if self.opponent_cooperation >= self.opponent_defection else 1
 
     def update(self, opponent_action):
@@ -556,6 +765,18 @@ class QLearningAgent(Agent):
         self.last_opponent_action = None
 
     def choose_action(self):
+        """
+        Choose an action based on the agent's policy.
+
+        The agent explores with probability epsilon, choosing a random action, and
+        exploits with probability (1 - epsilon), choosing the action that maximizes
+        the Q-value given the opponent's last action.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         if self.last_opponent_action is None or np.random.random() < self.epsilon:
             action = random.choice([0, 1])  # Explore: random action
         else:
@@ -663,6 +884,19 @@ class DeepQLearningAgent(Agent):
         return -1
 
     def act(self, state):
+        """
+        Choose an action based on the agent's policy.
+
+        The agent explores with probability epsilon, choosing a random action, and
+        exploits with probability (1 - epsilon), choosing the action that maximizes
+        the Q-value given the current state.
+
+        Args:
+            state (list): The current state of the game.
+
+        Returns:
+            int: The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         if np.random.random() < self.epsilon:
             return random.choice([0, 1])  # Random action for exploration
 
@@ -707,8 +941,22 @@ class DeepQLearningAgent(Agent):
                 self.prev_actions[-2],
                 opponent_action,
             ]
+        # print(self.prev_actions)
 
     def choose_action(self):
+        """
+        Choose an action based on the agent's policy.
+
+        The agent's policy is based on its memory of the last self.state_size actions, which
+        are stored in the `prev_actions` list. The agent uses this list to
+        create a state tensor, which is then passed to the `act` method to
+        determine the next action.
+
+        Returns
+        -------
+        int
+            The chosen action, either 0 (cooperate) or 1 (defect).
+        """
         state = np.array(self.prev_actions)
         return self.act(state)
 
