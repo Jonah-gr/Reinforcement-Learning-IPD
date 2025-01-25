@@ -12,6 +12,8 @@ runs/
 *.out
 *.toc
 
+# Tournament
+*.csv
 
 # C extensions
 *.so
