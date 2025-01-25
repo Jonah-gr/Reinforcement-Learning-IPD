@@ -20,9 +20,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-
-
-[project.dependencies]
 dependencies = [
 "pytest >= 7.0",
 "numpy >= 1.21",
