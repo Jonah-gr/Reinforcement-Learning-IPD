@@ -88,10 +88,10 @@ In addition, the `QLearningAgent()` and the `DeepQLearningAgent()` can also be u
 ### Training
 Train `QLearningAgent()` with a learning rate of 0.1 and the `DeepQLearningAgent()` with a memory of the last 10 rounds:
 ```bash
-python -m src.main train --agents "QLearningAgent(epsilon=0.1)" "DeepQLearningAgent(state_size=20)" --num_rounds 100 --episodes 1000
+python -m src.main train --agents "QLearningAgent(epsilon=0.1)" "DeepQLearningAgent(state_size=20, load_model=False)" --num_rounds 100 --episodes 1000
 ```
 Log files are automatically created for tensorboard during training. These are saved in `runs/training` if no other location has been set with `--log_dir`. 
-You can also use basic strategies in `--agents` to create comparability in tensorboard during training.
+You can also use basic strategies in `--agents` to create comparability in tensorboard during training. You can download the `DeepQLearningAgent()` I trained [here](https://1drv.ms/u/c/298fc70cfd08a0db/EfU2y4UkQDBMiFsThy1h8Y8Bw7JoozjEV1xG6NsIy1h8zg?e=vS1mIA). 
 After the training, it is then possible to have all agents compete against each other in a tournament:
 
 ### Tournament

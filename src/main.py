@@ -115,7 +115,7 @@ def main():
     tournament_parser.add_argument(
         "--save_dir",
         type=str,
-        default="runs/tournament/tournament_results.csv",
+        default="runs/tournament_results.csv",
         help="Specify the directory to save results",
     )
 
@@ -126,6 +126,12 @@ def main():
         type=bool,
         default=False,
         help="Run the app in debug mode",
+    )
+    app_parser.add_argument(
+        "--state_size",
+        type=int,
+        default=20,
+        help="Size of the state space",
     )
     app_parser.add_argument(
         "--path",
@@ -145,6 +151,8 @@ def main():
             print(f"Error: Failed to initialize agents. {e}")
             print("Available agents:", ", ".join(agent_classes.keys()))
             return
+        if not os.path.exists("runs"):
+            os.makedirs("runs")
 
     if args.command == "game":
         game = Game(args.agents[0], args.agents[1], verbose=args.verbose)
@@ -173,7 +181,7 @@ def main():
         tournament.save_results(args.save_dir)
 
     elif args.command == "app":
-        app.deep_q_agent = DeepQLearningAgent(state_size=20, path=args.path)
+        app.deep_q_agent = DeepQLearningAgent(state_size=args.state_size, path=args.path)
         app.web_user = WebUser()
         app.game = Game(app.deep_q_agent, app.web_user)
         webbrowser.open("http://127.0.0.1:5000")

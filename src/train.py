@@ -93,7 +93,6 @@ def train(
             if game.agent_a.__class__.__name__ == "DeepQLearningAgent":
                 writer.add_scalar("Loss/Episode", loss, episode)
                 writer.add_scalar("Epsilon", game.agent_a.epsilon, episode)
-                writer.add_scalar("Temparature", game.agent_a.temperature, episode)
 
             if (
                 game.agent_a.__class__.__name__ == "QLearningAgent"
@@ -107,7 +106,7 @@ def train(
             game.agent_b.reset()
 
         if game.agent_a.__class__.__name__ == "QLearningAgent":
-            print(game.agent_a.q_table)
+            print(f"Q Table:\n{game.agent_a.q_table}")
 
     # Save the trained model
     if game.agent_a.__class__.__name__ == "DeepQLearningAgent":
