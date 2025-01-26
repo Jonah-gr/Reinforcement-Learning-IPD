@@ -1,6 +1,7 @@
 from src.train import *
 from src.tournament import Tournament
 from src.game import Game
+from app.app import app, WebUser
 import argparse
 import ast
 import webbrowser
@@ -12,9 +13,7 @@ def create_object_from_string(input_string):
         expr = ast.parse(input_string, mode="eval")
 
         if not isinstance(expr.body, ast.Call):
-            raise ValueError(
-                "Input must be a call expression, e.g., ClassName(arg=value)"
-            )
+            raise ValueError("Input must be a call expression, e.g., ClassName(arg=value)")
 
         func_name = expr.body.func.id
 
@@ -116,7 +115,7 @@ def main():
     tournament_parser.add_argument(
         "--save_dir",
         type=str,
-        default="runs/tournament",
+        default="runs/tournament/tournament_results.csv",
         help="Specify the directory to save results",
     )
 
@@ -127,6 +126,12 @@ def main():
         type=bool,
         default=False,
         help="Run the app in debug mode",
+    )
+    app_parser.add_argument(
+        "--path",
+        type=str,
+        default="deep_q_agent.pt",
+        help="Path to the saved agent file",
     )
 
     args = parser.parse_args()
@@ -168,7 +173,9 @@ def main():
         tournament.save_results(args.save_dir)
 
     elif args.command == "app":
-        from app.app import app
+        app.deep_q_agent = DeepQLearningAgent(state_size=20, path=args.path)
+        app.web_user = WebUser()
+        app.game = Game(app.deep_q_agent, app.web_user)
         webbrowser.open("http://127.0.0.1:5000")
         app.run(args.debug)
 
