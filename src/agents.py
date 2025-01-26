@@ -633,9 +633,7 @@ class GradualAgent(Agent):
 
     def update(self, opponent_action):
         if opponent_action == 1:
-            self.retaliation_count += (
-                1  # Add one round of retaliation for each defection
-            )
+            self.retaliation_count += 1  # Add one round of retaliation for each defection
             self.forgiveness = True  # Forgive after retaliating
 
     def reset(self):
@@ -674,9 +672,7 @@ class SuspiciousGradualAgent(Agent):
 
     def update(self, opponent_action):
         if opponent_action == 1:
-            self.retaliation_count += (
-                1  # Add one round of retaliation for each defection
-            )
+            self.retaliation_count += 1  # Add one round of retaliation for each defection
             self.forgiveness = True  # Forgive after retaliating
 
     def reset(self):
@@ -757,9 +753,7 @@ class QLearningAgent(Agent):
     def __init__(self, q_table=None, alpha=0.01, gamma=0.5, epsilon=1.0):
         super().__init__()
         if q_table is None:
-            self.q_table = np.random.uniform(
-                -0.1, 0.1, (2, 2)
-            )  # Q-values for (Agent_Action, Opponent_Action)
+            self.q_table = np.random.uniform(-0.1, 0.1, (2, 2))  # Q-values for (Agent_Action, Opponent_Action)
         else:
             self.q_table = np.array(q_table)
         self.alpha = alpha  # Learning rate
@@ -800,9 +794,7 @@ class QLearningAgent(Agent):
         # Update Q-value using the Q-learning formula
         best_next_action = np.max(self.q_table[opponent_action])
         self.q_table[self.history[-1], opponent_action] += self.alpha * (
-            reward
-            + self.gamma * best_next_action
-            - self.q_table[self.history[-1], opponent_action]
+            reward + self.gamma * best_next_action - self.q_table[self.history[-1], opponent_action]
         )
 
         if self.epsilon > 0.001:
@@ -993,9 +985,7 @@ ALL_AGENTS = {
     SuspiciousWinStayLoseShiftAgent(),
 }
 
-BASIC_AGENTS = [
-    agent for agent in ALL_AGENTS if "QLearning" not in agent.__class__.__name__
-]
+BASIC_AGENTS = [agent for agent in ALL_AGENTS if "QLearning" not in agent.__class__.__name__]
 
 HIGHEST_REWARDS = {
     "RandomAgent": 300,

@@ -63,9 +63,7 @@ def train(
                 game.agent_b.update(action_a)
                 if game.agent_a.__class__.__name__ == "DeepQLearningAgent":
                     next_state_a = np.array([game.agent_a.prev_actions])
-                    game.agent_a.remember(
-                        state_a, action_a, reward_a, next_state_a, False
-                    )
+                    game.agent_a.remember(state_a, action_a, reward_a, next_state_a, False)
                     loss = game.agent_a.replay()
                     if loss is None:
                         loss = 0
@@ -86,8 +84,7 @@ def train(
                 f"{game.agent_a.__class__.__name__} Rewards/Episode",
                 {
                     f"{game.agent_a.__class__.__name__}": total_reward_a,
-                    f"AVG {game.agent_a.__class__.__name__}": sum(all_rewards)
-                    / (episode + 1),
+                    f"AVG {game.agent_a.__class__.__name__}": sum(all_rewards) / (episode + 1),
                     "Maximum": HIGHEST_REWARDS[opponent.__class__.__name__],
                 },
                 episode,
@@ -102,13 +99,9 @@ def train(
                 game.agent_a.__class__.__name__ == "QLearningAgent"
                 or game.agent_a.__class__.__name__ == "DeepQLearningAgent"
             ):
-                writer.add_scalar(
-                    "sum(cooperate,defect)/Episode", sum(game.agent_a.history), episode
-                )
+                writer.add_scalar("sum(cooperate,defect)/Episode", sum(game.agent_a.history), episode)
 
-            highest_posssible_rewards.append(
-                HIGHEST_REWARDS[opponent.__class__.__name__]
-            )
+            highest_posssible_rewards.append(HIGHEST_REWARDS[opponent.__class__.__name__])
 
             game.agent_a.reset()
             game.agent_b.reset()

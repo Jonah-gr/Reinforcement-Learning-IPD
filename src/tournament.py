@@ -5,7 +5,7 @@ from tqdm import tqdm
 
 class Tournament:
     def __init__(self, agents, num_games, num_rounds, inlcude_params=False):
-        self.agents = agents
+        self.agents = agents + BASIC_AGENTS
         self.num_games = num_games
         self.num_rounds = num_rounds
         self.include_params = inlcude_params
@@ -82,12 +82,10 @@ class Tournament:
 
 if __name__ == "__main__":
     agents = [
-        QLearningAgent(
-            q_table=[[0.4, 0.08562763], [2.17148565, 0.24526072]], epsilon=0.0
-        ),
+        QLearningAgent(q_table=[[0.4, 0.08562763], [2.17148565, 0.24526072]], epsilon=0.0),
         DeepQLearningAgent(state_size=20),
         RandomStrategies(),
-    ] + BASIC_AGENTS
+    ]
     # for agent in agents:
     tournament = Tournament(agents, num_games=100, num_rounds=100)
     tournament.play_tournament()

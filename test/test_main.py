@@ -142,9 +142,7 @@ def test_invalid_agent_in_game():
         "10",
     ]
 
-    with patch.object(sys, "argv", ["main.py"] + args), patch(
-        "builtins.print"
-    ) as mock_print:
+    with patch.object(sys, "argv", ["main.py"] + args), patch("builtins.print") as mock_print:
         main()
 
     mock_print.assert_any_call(
@@ -162,9 +160,7 @@ def test_invalid_agent_in_train():
         "1000",
     ]
 
-    with patch.object(sys, "argv", ["main.py"] + args), patch(
-        "builtins.print"
-    ) as mock_print:
+    with patch.object(sys, "argv", ["main.py"] + args), patch("builtins.print") as mock_print:
         main()
 
     mock_print.assert_any_call(
@@ -183,9 +179,7 @@ def test_invalid_agent_in_tournament():
         "50",
     ]
 
-    with patch.object(sys, "argv", ["main.py"] + args), patch(
-        "builtins.print"
-    ) as mock_print:
+    with patch.object(sys, "argv", ["main.py"] + args), patch("builtins.print") as mock_print:
         main()
 
     mock_print.assert_any_call(
