@@ -4,7 +4,7 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/Jonah-gr/Reinforcement-Learning-IPD)
 ![Static Badge](https://img.shields.io/badge/Python-3.8--3.12-blue)
 
-This project explores the Iterated Prisoner's Dilemma (IPD) using Reinforcement Learning. A Q-Learning Agent and a Deep Q-Learning Agent are trained to optimize strategies against a total number of 24 basic agents. I wanted to explore and show that RL agents are capable of breaking through the dilemma and learning behaviors like generosity, forgiveness, and kindness that are the keys to long-term rewards.
+This project explores the Iterated Prisoner's Dilemma (IPD) using Reinforcement Learning. A Q-Learning Agent and a Deep Q-Learning Agent are trained to optimize strategies against a total of 24 basic agents. I wanted to explore and show that RL agents are capable of breaking through the dilemma and learning behaviors like generosity, forgiveness, and kindness that are the keys to long-term rewards.
 
 ## Table of Contents
 1. [What is the IPD?](#what-is-the-ipd)
@@ -30,7 +30,7 @@ their rewards on the basis of a payoff matrix:
 
 *Table: payoff matrix*
 
-The dilemma is that, from a rational point of view, it only makes sense to defect. If the aim is to win, that is also the right strategy. However, if the aim is to maximise the reward, the strategy is extremely poor. As [Robert Axelrod](https://en.wikipedia.org/wiki/Robert_Axelrod_(political_scientist)) has already shown, in the long term it is more worthwhile focussing on cooperation but still responding to your opponent's betrayal accordingly. That's why very simple strategies like Tit For Tat are superior to treacherous and resentful strategies.
+The dilemma is that, from a rational point of view, it only makes sense to defect. If the aim is to win, that is also the right strategy. However, if the aim is to maximize the reward, the strategy is extremely poor. As [Robert Axelrod](https://en.wikipedia.org/wiki/Robert_Axelrod_(political_scientist)) has already shown, in the long term it is more worthwhile to focus on cooperation while still responding to your opponent's betrayal accordingly. That's why very simple strategies like Tit For Tat are superior to treacherous and resentful strategies.
 
 ## Usage
 ### Download
@@ -92,7 +92,7 @@ python -m src.main train --agents "QLearningAgent(epsilon=0.1)" "DeepQLearningAg
 ```
 Log files are automatically created for tensorboard during training. These are saved in `runs/training` if no other location has been set with `--log_dir`. 
 You can also use basic strategies in `--agents` to create comparability in tensorboard during training.
-After the training it is then possible to have all agents compete against each other in a tournament:
+After the training, it is then possible to have all agents compete against each other in a tournament:
 
 ### Tournament
 Play a tournament in which each specified agent and all base strategies play 100 games of 100 rounds against each base strategy:
@@ -110,6 +110,29 @@ Make sure that the path to the model is correct.
 
 ## Results
 
+When training the `QLearningAgent(α=0.01, γ=0.5)` and `DeepQLearningAgent(state_size=20, α=0.001, γ=0.99)` (and `RandomStrategies()`) over 10000 epochs, each with a game of 100 rounds, the following results were obtained:
+
+| **Agent**            | **RandomStrategies()** | **QLearningAgent(α=0.01, γ=0.5)** | **DeepQLearningAgent(state_size=20, α=0.001, γ=0.99)**
+|----------------------|-------------------|----------------------|-------------------|
+| **average reward per epoch** |  233  | 248 | 272 |
+
+![RandomStrategies() training](poster/logos/random_strategies.PNG)
+*purple: average reward, orange: highest possible reward, green: reward*
+![QLearningAgent() training](poster/logos/qlearning.PNG)
+*yellow: average reward, pink: reward, purple: highest possible reward*
+![DeepQLearningAgent() training](poster/logos/deepq.PNG)
+
+Furthermore, the following is the result of 
+```bash
+python -m src.main tournament --agents "QLearningAgent(q_table=[[0.4, 0.08562763], [2.17148565, 0.24526072]], epsilon=0.0)" "DeepQLearningAgent(state_size=20)" --num_rounds 100 --num_games 100
+```
+![tournament results](poster/logos/tournament.png)
+
 ## License
 
+This project is licensed under the MIT License. See the [LICENSE](/LICENSE) file for details.
+
 ## Acknowledgement
+
+Great video by Veritasium: https://www.youtube.com/watch?v=mScpHTIi-kM&t
+
