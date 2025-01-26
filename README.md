@@ -4,7 +4,7 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/Jonah-gr/Reinforcement-Learning-IPD)
 ![Static Badge](https://img.shields.io/badge/Python-3.8--3.12-blue)
 
-This project explores the Iterated Prisoner's Dilemma (IPD) using Reinforcement Learning. A Q-Learning Agent and a Deep Q-Learning Agent are trained to optimize strategies against a total of 24 basic agents. I wanted to explore and show that RL agents are capable of breaking through the dilemma and learning behaviors like generosity, forgiveness, and kindness that are the keys to long-term rewards.
+This project explores the Iterated Prisoner's Dilemma (IPD) using Reinforcement Learning. A Q-Learning Agent and a Deep Q-Learning Agent are trained to optimize strategies against a total of 24 basic agents. I wanted to explore and show that RL agents are capable of breaking through the dilemma and learning behaviors like generosity, forgiveness, and kindness that are the keys to long-term rewards. This [poster](poster/poster.pdf) in German summarises all the important information and results.
 
 ## Table of Contents
 1. [What is the IPD?](#what-is-the-ipd)
