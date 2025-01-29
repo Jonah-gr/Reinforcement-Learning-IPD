@@ -1,0 +1,88 @@
+\documentclass{PHKA_inf} 
+%add the additional packages and macros that you want to use
+\input{packages_macros}
+\usepackage[round]{natbib} 
+% important update for glossaries, before document 
+\loadglsentries{C) Back Matter/acronyms.tex}
+\loadglsentries{C) Back Matter/glossary.tex} 
+% \makeglossaries %https://www.overleaf.com/learn/latex/glossaries
+
+%shows fixme notes
+%\fxsetup{status=draft} % comment/delete this line if you want to your final output
+
+\usepackage[ngerman]{babel} %if changed to \usepackage[ngerman]{babel} "Table of contents" changes to "Inhaltsverzeichnis", "abstract" becomes "Zusammenfassung" and "references" is translated to "Literatur".
+\usepackage{makecell}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue!70!black
+}
+
+
+%remove all the things you don't need and add all the things you need. you can also change the order of the elements at your will.
+\begin{document}
+
+    %Start with front matter
+    \input{A) Front Matter/titlepage} %Creates the titlepage
+
+
+    
+
+% 	\frontmatter{}
+	
+	\cleardoublepage{}
+	
+	\cleardoublepage{}
+
+
+	
+    \microtypesetup{protrusion=false}
+    \tableofcontents{}
+    % Use an optional list of tables / figures / algorithms / listings(code).
+ 
+    \cleardoublepage{}
+    
+    
+    \cleardoublepage{}
+   
+    \cleardoublepage{}
+    \microtypesetup{protrusion=true}
+    
+
+	
+	
+	\mainmatter{}
+	%add your chapters here
+	%Comment Chapters with "%" to exclude them
+	
+	%Kapitel
+    \input{B) Chapters/Einleitung}
+    \input{B) Chapters/Hintergrund}
+    \input{B) Chapters/Methodik}
+    \input{B) Chapters/Ergebnisse}
+    \input{B) Chapters/Diskussion}
+    \input{B) Chapters/Fazit}
+    
+    
+	
+	
+	%Referenzen
+    %\bibliographystyle{apalike}
+	%\bibliography{bibliography}
+	
+	%\printglossary[type=\acronymtype]
+    %\printglossary
+	
+
+    % \cleardoublepage{}
+	%\pagebreak
+	
+	%add your end matter here
+% 	\appendix{}
+
+	%\input{C) Back Matter/appendix}
+	
+	
+	
+\end{document}
