@@ -4,16 +4,21 @@ Das Gefangenendilemma ist eines der bekanntesten Probleme der Spieltheorie und
 beschreibt eine Situation, in der zwei Spieler unabhängig voneinander entscheiden 
 müssen, ob sie kooperieren oder defektieren. Die Auszahlung für jeden Spieler hängt 
 sowohl von der eigenen Entscheidung als auch von der des Gegenübers ab. 
-Die klassische Auszahlungsmatrix sieht dabei folgendermaßen aus: \newline \newline 
-% \begin{table}
-\begin{tabular}{c|c|c}
-        & Spieler B kooperiert & Spieler B defektiert\\
-    \hline \\
-    Spieler A kooperiert &  \makecell{(R, R) \\ Belohnung für Kooperation} & \makecell{(S, T) \\ A verliert, B gewinnt} \\
-    \hline \\
-    Spieler A defektiert &  \makecell{(T, S) \\ A gewinnt, B verliert} & \makecell{(P, P) \\ Bestrafung für gegenseitige Defektion} \\
-\end{tabular}
-% \end{table}
+Die klassische Auszahlungsmatrix sieht dabei folgendermaßen aus:
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|c|c}
+            & Spieler B kooperiert & Spieler B defektiert\\
+        \hline
+        Spieler A kooperiert &  \makecell{(R, R) \\ Belohnung für Kooperation} & \makecell{(S, T) \\ A verliert, B gewinnt} \\
+        \hline
+        Spieler A defektiert &  \makecell{(T, S) \\ A gewinnt, B verliert} & \makecell{(P, P) \\ Bestrafung für gegenseitige Defektion} \\
+    \end{tabular}
+    \caption{Allgemeine Auszahlungsmatrix}
+    \label{table:allgemeineauszahlungsmatrix}
+\end{table}
+
 Dabei gilt üblicherweise:
 \begin{itemize}
     \item T (Temptation) > R (Reward) > P (Punishment) > S (Sucker's payoff)
