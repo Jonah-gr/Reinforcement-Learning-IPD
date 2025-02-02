@@ -4,5 +4,134 @@ Um zu untersuchen, wie Reinforcement-Learning-Agenten im Iterierten
 Gefangenendilemma (IPD) agieren, wurde eine experimentelle 
 \href{https://github.com/Jonah-gr/Reinforcement-Learning-IPD}{Python-Umgebung} implementiert. 
 Diese Umgebung ermöglicht es, Spiele zu simulieren, RL-Agenten zu trainieren, und diese dann zu evaluieren.
+Für all diese Zwecke wurde die Rundenanzahl pro Spiel auf $n=100$ gesetzt und die folgende Auszahlungsmatrix verwendet:
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|c|c}
+            & Spieler B kooperiert & Spieler B defektiert\\
+        \hline
+        Spieler A kooperiert &  (3, 3) & (5, 0) \\
+        \hline
+        Spieler A defektiert &  (0, 5) & (1, 1) \\
+    \end{tabular}
+    \caption{Auszahlungsmatrix}
+\end{table}
+
 \section{Agenten und Strategien}
+Für das Training und die Evaluation der RL-Agent wurden folgende Basis-Strategien implementiert:
+
+\begin{longtable}{|c|m{7cm}|}
+    \hline
+    \textbf{Strategie} & \textbf{Beschreibung} \\
+    \hline
+    RandomAgent() & Entscheidet zufällig \\
+    \hline
+    AlwaysCooperateAgent() & Kooperiert immer \\
+    \hline
+    AlwaysDefectAgent() & Verrät immer \\
+    \hline
+    ProvocativeAgent() & Verrät nach zweimaligem Kooperieren \\
+    \hline
+    TitForTatAgent() & Imitiert den Gegner \\
+    \hline
+    TitForTwoTatsAgent() & Verrät, wenn der Gegner zweimal verrät \\
+    \hline
+    TwoTitsForTatAgent() & Verrät zweimal, wenn der Gegner verrät \\
+    \hline
+    TitForTatOppositeAgent() & Imitiert den Gegner umgekehrt \\
+    \hline
+    SpitefulAgent() & Verrät immer, wenn der Gegner verrät \\
+    \hline
+    GenerousTitForTatAgent() & Imitiert den Gegner, vergibt aber in 10\% der Fälle \\
+    \hline
+    AdaptiveAgent() & Verrät, wenn der Gegner in den letzten 10 Runden zu mehr als 50\% verraten hat \\
+    \hline
+    PavlovAgent() & Verrät, wenn die Entscheidungen in der vorherigen Runde unterschiedlich waren \\
+    \hline
+    GradualAgent() & Verrät so oft, wie der Gegner verrät \\
+    \hline
+    WinStayLoseShiftAgent() & Ändert die Strategie, wenn die letzte Belohnung < 1 war \\
+    \hline
+    SoftMajorityAgent() & Verrät, wenn der Gegner in mehr als 50\% der Fälle verrät \\
+    \hline
+    SuspiciousTitForTatAgent() & Imitiert den Gegner und verrät in der ersten Runde \\
+    \hline
+    SuspiciousAdaptiveAgent() & Verrät, wenn der Gegner in den letzten 10 Runden zu mehr als 50\% verraten hat, und verrät in der ersten Runde \\
+    \hline
+    SuspiciousGenerousTitForTatAgent() & Imitiert den Gegner, vergibt aber in 10\% der Fälle und verrät in der ersten Runde \\
+    \hline
+    SuspiciousGradualAgent() & Verrät so oft, wie der Gegner verrät, und verrät in der ersten Runde \\
+    \hline
+    SuspiciousPavlovAgent() & Verrät, wenn die Entscheidungen in der vorherigen Runde unterschiedlich waren, und verrät in der ersten Runde \\
+    \hline
+    SuspiciousSoftMajorityAgent() & Verrät, wenn der Gegner in mehr als 50\% der Fälle verrät, und verrät in der ersten Runde \\
+    \hline
+    SuspiciousTitForTwoTatsAgent() & Verrät, wenn der Gegner zweimal verrät, und verrät in der ersten Runde \\
+    \hline
+    SuspiciousTwoTitsForTatAgent() & Verrät zweimal, wenn der Gegner verrät, und verrät in der ersten Runde \\
+    \hline
+    SuspiciousWinStayLoseShiftAgent() & Ändert die Strategie, wenn die letzte Belohnung < 1 war, und verrät in der ersten Runde \\
+    \hline
+\caption{Basis-Strategien}
+\label{table:basestrategies}
+\end{longtable}
+
+Der Q-Learning Agent nutzt eine Q-Tabelle zur Approximation der Q-Werte.
+Hierbei steuert die Lernrate $\alpha=0.01$, wie stark neue Informationen in die Q-Tabelle einfließen, während der 
+Discount-Faktor $\gamma=0.5$ zukünftige Belohnungen mit einbezieht. Der Agent nutzt eine $\epsilon$-greedy Strategie, 
+bei der mit Wahrscheinlichkeit $\epsilon$ eine zufällige Aktion gewählt wird, um Exploration zu ermöglichen. 
+$\epsilon$ startet bei 1.0 und wird mit 0.995 pro Episode reduziert, bis ein Minimum von 0.001 erreicht ist. 
+Der Agent passt seine Q-Werte nach jeder Runde an und berücksichtigt dabei eine modifizierte Belohnungsfunktion:
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|c|c}
+            & Gegner kooperiert & Gegner defektiert\\
+        \hline
+        Q-Agent kooperiert &  0.2 & -1 \\
+        \hline
+        Q-Agent defektiert &  2 & -0.5 \\
+    \end{tabular}
+    \caption{Q-Learning Belohnungsfunktion}
+\end{table}
+Zur Entscheidungsfindung nutzt er entweder zufällige
+Exploration oder wählt die Aktion mit dem höchsten Q-Wert basierend auf der letzten Gegneraktion.
+
+Der Deep Q-Learning Agent nutzt ein neuronales Netzwerk zur Approximation der Q-Werte und basiert auf einem 
+Feedforward-Netzwerk mit drei voll verbundenen Schichten: Eine Eingabeschicht mit 64 Neuronen, eine versteckte 
+Schicht mit 32 Neuronen und eine Ausgabeschicht mit 2 Neuronen, die die Q-Werte für die beiden möglichen Aktionen 
+(Kooperation oder Defektion) liefert. ReLU-Aktivierungen sorgen für nicht-lineare Modellierung, während Xavier-Initialisierung 
+eine stabile Gewichtsverteilung gewährleistet. Diese sorgt dafür, dass die Gewichte so initialisiert werden, dass der 
+Informationsfluss durch das Netzwerk stabil bleibt. Die Gewichte $W$ werden so initialisiert, dass
+\begin{equation}
+    W \sim U \left( -\frac{\sqrt{6}}{\sqrt{n_{\text{in}}+n_{\text{out}}}}, \frac{6}{\sqrt{n_{\text{in}}+n_{\text{out}}}} \right)
+\end{equation}
+mit $n_{in}$ und $n_{out}$ als Anzahl der Neuronen der vorherigen und der aktuellen Schicht. Die Varianz der Gewichte bleibt
+also über alle Schichten hinweg konstant.
+Das Netz bekommt die letzten zehn Runden, also einen 20-dimensionalen 
+Zustandsvektor, als Eingabe. Der Agent nutzt eine Replay-Memory (max. 20.000 Einträge) zur stabileren 
+Lernprozessgestaltung und ein $\epsilon$-greedy Explorationsverfahren, bei dem die Wahrscheinlichkeit für zufällige Aktionen mit 
+zunehmendem Training abnimmt ($\epsilon$ sinkt von 1.0 auf 0.001). Das Lernen erfolgt über MSE-Verlust und Adam-Optimierung mit 
+einer Lernrate von 0.001. Die Belohnungsfunktion ist leicht modifiziert, und sieht folgendermaßen aus:
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|c|c}
+            & Gegner kooperiert & Gegner defektiert\\
+        \hline
+        Deep Q-Agent kooperiert &  \makecell{2 oder 2.5, wenn \\ letzte beide Runden -1} & -2 \\
+        \hline
+        Deep Q-Agent defektiert &  1 & -1 \\
+    \end{tabular}
+    \caption{Deep Q-Learning Belohnungsfunktion}
+\end{table}
+Während des Trainings werden zufällige Minibatches aus der Replay-Memory gezogen und die Q-Werte mit der Bellman-Gleichung 
+aktualisiert, wobei zukünftige Belohnungen mit $\gamma=0.99$ diskontiert werden. Der Agent speichert seine letzten Aktionen 
+in einem Zustandsvektor und nutzt diese zur Entscheidungsfindung.
+
+Beide RL-Agenten wurden in 10000 Episoden gegen eine zufällige aber feste Reihenfolge von Basis-Agenten trainiert.
+
+
 \section{Evaluierungsmethodik}
+Die Evaluierungsmethodik basiert auf einem Turnierformat, in dem jeder Agent gegen jeden Basis-Agenten 100 Spiele 
+absolvieren muss. Jeder Agent spielt also $24 * 100 = 2400$ Spiele (es gibt 24 Basis-Agenten) und $2400 * 100 = 240000$ Runden. Dieses Format
+stellt sicher, dass für alle Agenten die selben Voraussetzungen herrschen und statistisch signifante Ergebnisse erzielt werden.
