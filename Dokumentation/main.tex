@@ -12,6 +12,8 @@
 
 \usepackage[ngerman]{babel} %if changed to \usepackage[ngerman]{babel} "Table of contents" changes to "Inhaltsverzeichnis", "abstract" becomes "Zusammenfassung" and "references" is translated to "Literatur".
 \usepackage{makecell}
+\usepackage{float}
+\usepackage{longtable}
 \usepackage{hyperref}
 \hypersetup{
   colorlinks=true,
@@ -39,6 +41,7 @@
 	
     \microtypesetup{protrusion=false}
     \tableofcontents{}
+    \listoftables
     % Use an optional list of tables / figures / algorithms / listings(code).
  
     \cleardoublepage{}

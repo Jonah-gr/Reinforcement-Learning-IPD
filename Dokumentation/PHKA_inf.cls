@@ -83,61 +83,6 @@
 \newcommand{\CoSupervisorTwo}[1]{\renewcommand{\CoSupervisorEngValue}{#1}}
 \newcommand{\Year}[1]{\YearGer{#1} \YearEng{#1}}
 
-% -- Command to generate the titlepage
-% \newcommand{\Titlepage}{
-%     \newgeometry{bottom=0.1cm}
-% 	\begin{titlepage}
-% 		\enlargethispage{5\baselineskip}
-% 		\fontfamily{phv}\selectfont
-% 		\thispagestyle{empty}
-% 		% \begin{center}
-% 	%    \begin{adjustwidth}{-0.5cm}{-2cm}    
-% 	% 			\vspace*{-2cm}
-% 	% 			\hspace*{10.17cm}
-				
-% 				%University logo
-% 		\begin{figure}
-% 		% \begin{center}
-% 			\includegraphics[width=0.4\linewidth]{../poster/logos/HSD.png}
-% 		% \end{center}
-% 		\end{figure}
-% 	    \vspace{2.5cm}			%
-
-% 				\centering 	
-				
-% 				% Title
-% 				{\scshape{\textbf{\huge \TitleSetup}\par}}
-% 				\vspace{1.5cm}
-% 				%Thesis title
-% 				%{\TitleTitleSetup\par}
-% 				%{\LARGE \glqq \TitleValue \par}
-				
-% 				% \vspace{1.2cm} % If title is multiple lines long change the space here
-				
-				
-% 				%vorgelegt von  \vspace{0.2cm}\linebreak
-% 				{\fontsize{13}{16}\selectfont \WhoValue} 
-% 		          % {J. Feitsch/D. Sokalski}
-				
-% 				\vspace{2cm} %if name is multiple lines long change the space here
-				
-% 				%angestrebter akademischer Grad \vspace{0.2cm}\linebreak
-% 				%{\fontsize{13}{16}\selectfont \DegreeValue \par}
-% 				\vspace{1.5cm}
-				
-% 				%\flushleft
-				
-				
-			
-               
-                
-% % 			\end{adjustwidth}	
-
-% 		% \end{center}
-% 	\end{titlepage}
-% 	\restoregeometry
-% }
-
 
 \newcommand{\Titlepage}{
     \newgeometry{bottom=0.1cm}
@@ -191,7 +136,7 @@
 					% degree programme as it appears on & & \\
 					% the student record sheet: & & \vspace{0.3cm}\\
 					
-					Betreut von: & \hspace{1cm} & \SupervisorValue \\
+					Dozent: & \hspace{1cm} & \SupervisorValue \\
 					% & \hspace{1cm} & \SupervisorEngValue \\
 					% \if\CoSupervisorValue0
 					% \else
