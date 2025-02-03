@@ -40,7 +40,6 @@ def train(
 
     for agent in agents:
         all_rewards = []
-        highest_posssible_rewards = []
 
         for episode in tqdm(range(episodes), desc="Training Episodes"):
             # Choose a random opponent for this episode
@@ -59,17 +58,19 @@ def train(
                     reward_a,
                     _,
                 ) = game.play_round()
+
+                if game.agent_a.__class__.__name__ == "QLearningAgent":
+                    game.agent_a.update_q_values(action_b, reward_a)
+
                 game.agent_a.update(action_b)
                 game.agent_b.update(action_a)
+
                 if game.agent_a.__class__.__name__ == "DeepQLearningAgent":
                     next_state_a = np.array([game.agent_a.prev_actions])
                     game.agent_a.remember(state_a, action_a, reward_a, next_state_a, False)
                     loss = game.agent_a.replay()
                     if loss is None:
                         loss = 0
-
-                if game.agent_a.__class__.__name__ == "QLearningAgent":
-                    game.agent_a.update_q_values(action_b, reward_a)
 
                 total_reward_a += reward_a
 
@@ -99,8 +100,6 @@ def train(
                 or game.agent_a.__class__.__name__ == "DeepQLearningAgent"
             ):
                 writer.add_scalar("sum(cooperate,defect)/Episode", sum(game.agent_a.history), episode)
-
-            highest_posssible_rewards.append(HIGHEST_REWARDS[opponent.__class__.__name__])
 
             game.agent_a.reset()
             game.agent_b.reset()
