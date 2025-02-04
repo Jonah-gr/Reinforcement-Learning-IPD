@@ -110,21 +110,22 @@ Make sure that the path to the model is correct.
 
 ## Results
 
-When training the `QLearningAgent(α=0.01, γ=0.5)` and `DeepQLearningAgent(state_size=20, α=0.001, γ=0.99)` (and `RandomStrategies()`) over 10000 epochs, each with a game of 100 rounds, the following results were obtained:
+When training the `QLearningAgent(α=0.001, γ=0.95)` and `DeepQLearningAgent(state_size=20, α=0.001, γ=0.95)` (and `RandomStrategies()`) over 10000 epochs, each with a game of 100 rounds, the following results were obtained:
 
 | **Agent**            | **RandomStrategies()** | **QLearningAgent(α=0.01, γ=0.5)** | **DeepQLearningAgent(state_size=20, α=0.001, γ=0.99)**
 |----------------------|-------------------|----------------------|-------------------|
-| **average reward per epoch** |  233  | 248 | 272 |
+| **average reward per epoch** |  233  | 265 | 287 |
 
 ![RandomStrategies() training](poster/logos/random_strategies.PNG)
 *purple: average reward, orange: highest possible reward, green: reward*
 ![QLearningAgent() training](poster/logos/qlearning.PNG)
-*yellow: average reward, pink: reward, purple: highest possible reward*
+*pink: average reward, gray: reward, orange: highest possible reward*
 ![DeepQLearningAgent() training](poster/logos/deepq.PNG)
+*pink: average reward, gray: reward, purple: highest possible reward*
 
 Furthermore, the following is the result of 
 ```bash
-python -m src.main tournament --agents "QLearningAgent(q_table=[[0.4, 0.08562763], [2.17148565, 0.24526072]], epsilon=0.0)" "DeepQLearningAgent(state_size=20)" --num_rounds 100 --num_games 100
+python -m src.main tournament --agents "QLearningAgent(q_table=[[52.7929238, 2.61803697], [0.9977664, 53.59111475]], epsilon=0.0)" "DeepQLearningAgent(state_size=20)" --num_rounds 100 --num_games 100
 ```
 ![tournament results](poster/logos/tournament.png)
 
