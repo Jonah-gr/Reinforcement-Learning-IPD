@@ -99,7 +99,11 @@ def train(
                 game.agent_a.__class__.__name__ == "QLearningAgent"
                 or game.agent_a.__class__.__name__ == "DeepQLearningAgent"
             ):
-                writer.add_scalar("sum(cooperate,defect)/Episode", sum(game.agent_a.history), episode)
+                writer.add_scalar(
+                    f"{game.agent_a.__class__.__name__} sum(cooperate,defect)/Episode",
+                    sum(game.agent_a.history),
+                    episode,
+                )
 
             game.agent_a.reset()
             game.agent_b.reset()
@@ -107,10 +111,10 @@ def train(
         if game.agent_a.__class__.__name__ == "QLearningAgent":
             print(f"Q Table:\n{game.agent_a.q_table}")
 
-    # Save the trained model
-    if game.agent_a.__class__.__name__ == "DeepQLearningAgent":
-        torch.save(game.agent_a.model.state_dict(), game.agent_a.path)
-        print(f"Trained model saved to {game.agent_a.path}")
+        # Save the trained model
+        if game.agent_a.__class__.__name__ == "DeepQLearningAgent":
+            torch.save(game.agent_a.model.state_dict(), game.agent_a.path)
+            print(f"Trained model saved to {game.agent_a.path}")
 
     # Close TensorBoard writer
     writer.close()

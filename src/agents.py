@@ -750,7 +750,9 @@ class SuspiciousSoftMajorityAgent(Agent):
 
 
 class QLearningAgent(Agent):
-    def __init__(self, q_table=None, alpha=0.01, gamma=0.5, epsilon=1.0):
+    def __init__(
+        self, q_table=None, alpha=0.001, gamma=0.95, epsilon=1.0, epsilon_decay=0.9995, epsilon_min=0.00001
+    ):  ### 0.8417490325 < x < 0.841749035 bei alpha = 0.01
         super().__init__()
         if q_table is None:
             self.q_table = np.random.uniform(-0.1, 0.1, (2, 2))  # Q-values for (Agent_Action, Opponent_Action)
@@ -759,7 +761,9 @@ class QLearningAgent(Agent):
         self.alpha = alpha  # Learning rate
         self.gamma = gamma  # Discount factor
         self.epsilon = epsilon  # Exploration rate
-        self.last_opponent_action = None
+        self.epsilon_decay = epsilon_decay  # Exploration decay rate
+        self.epsilon_min = epsilon_min
+        self.last_opponent_action = 0
 
     def choose_action(self):
         """
@@ -774,7 +778,7 @@ class QLearningAgent(Agent):
         int
             The chosen action, either 0 (cooperate) or 1 (defect).
         """
-        if self.last_opponent_action is None or np.random.random() < self.epsilon:
+        if np.random.random() < self.epsilon:
             action = random.choice([0, 1])  # Explore: random action
         else:
             # Exploit: Choose action with the highest Q-value given opponent's last action
@@ -782,29 +786,20 @@ class QLearningAgent(Agent):
         return action
 
     def update_q_values(self, opponent_action, reward):
-        if reward == 3:
-            reward = 0.2
-        elif reward == 0:
-            reward = -1
-        elif reward == 5:
-            reward = 2
-        else:
-            reward = -0.5
-
         # Update Q-value using the Q-learning formula
         best_next_action = np.max(self.q_table[opponent_action])
-        self.q_table[self.history[-1], opponent_action] += self.alpha * (
-            reward + self.gamma * best_next_action - self.q_table[self.history[-1], opponent_action]
+        self.q_table[self.last_opponent_action, self.history[-1]] += self.alpha * (
+            reward + self.gamma * best_next_action - self.q_table[self.last_opponent_action, self.history[-1]]
         )
 
-        if self.epsilon > 0.001:
-            self.epsilon *= 0.995
+        if self.epsilon > self.epsilon_min:
+            self.epsilon *= self.epsilon_decay
 
     def update(self, action):
         self.last_opponent_action = action
 
     def reset(self):
-        self.last_action = None
+        self.last_opponent_action = 0
         self.history = []
         self.reward_history = []
 
@@ -831,12 +826,13 @@ class DeepQLearningAgent(Agent):
     def __init__(
         self,
         state_size=10,
-        gamma=0.99,
+        gamma=0.95,
         epsilon=1.0,
-        epsilon_min=0.001,
-        epsilon_decay=0.999,
+        epsilon_min=0.00001,
+        epsilon_decay=0.9995,
         learning_rate=0.001,
-        batch_size=1,
+        tau=0.005,
+        batch_size=5,
         load_model=True,
         path="deep_q_agent.pt",
         device="cpu",
@@ -848,18 +844,23 @@ class DeepQLearningAgent(Agent):
         self.epsilon = epsilon  # Exploration rate
         self.epsilon_min = epsilon_min  # Minimum exploration rate
         self.epsilon_decay = epsilon_decay  # Exploration decay rate
+        self.tau = tau
         self.batch_size = batch_size
         self.path = path
         self.device = device
 
         # Neural network and optimizer
         self.model = DeepQNetwork(state_size).to(self.device)
-        self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)  ### Adam
         self.loss_fn = nn.MSELoss()
 
         if load_model:
             self.model.load_state_dict(torch.load(self.path))
             self.epsilon = 0.0
+
+        self.target_model = DeepQNetwork(state_size).to(self.device)
+        self.target_model.load_state_dict(self.model.state_dict())  # Copy initial weights
+        self.target_model.eval()
 
         # Initialize with default state
         self.prev_actions = [0] * state_size
@@ -868,15 +869,7 @@ class DeepQLearningAgent(Agent):
         self.memory.append((state, action, self.get_reward(reward), next_state, done))
 
     def get_reward(self, reward):
-        if reward == 3:
-            if self.history and self.history[-1] == 1:
-                return 2.5
-            return 2
-        elif reward == 0:
-            return -2
-        elif reward == 5:
-            return 1
-        return -1
+        return reward
 
     def act(self, state):
         """
@@ -912,7 +905,7 @@ class DeepQLearningAgent(Agent):
             reward = torch.FloatTensor([reward]).to(self.device)
             target = reward
             if not done:
-                target += self.gamma * torch.max(self.model(next_state).detach())
+                target += self.gamma * torch.max(self.target_model(next_state).detach())
 
             current_q = self.model(state).squeeze(0)[action].unsqueeze(0)
 
@@ -923,6 +916,8 @@ class DeepQLearningAgent(Agent):
 
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
+
+        self.update_target_model()
         return loss
 
     def update(self, opponent_action):
@@ -936,7 +931,15 @@ class DeepQLearningAgent(Agent):
                 self.prev_actions[-2],
                 opponent_action,
             ]
-        # print(self.prev_actions)
+
+    def update_target_model(self):
+        target_net_state_dict = self.target_model.state_dict()
+        for key in self.model.state_dict():
+            target_net_state_dict[key] = self.model.state_dict()[key] * self.tau + target_net_state_dict[key] * (
+                1 - self.tau
+            )
+
+        self.target_model.load_state_dict(self.model.state_dict())
 
     def choose_action(self):
         """
