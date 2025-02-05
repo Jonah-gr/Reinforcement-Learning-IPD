@@ -53,7 +53,7 @@ entsprechend an. RL-Probleme werden typischerweise als Markov-Entscheidungsproze
 \begin{itemize}
     \item Zustand (State, $S$): Die aktuelle Situation der Umgebung.
     \item Aktion (Action, $A$): Eine Entscheidung, die der Agent treffen kann.
-    \item Belohnung (Reward, $R$): Eine Rückmeldung, die die Qualitaten der gewählten Aktion bewertet.
+    \item Belohnung (Reward, $R$): Eine Rückmeldung, die die Qualitäten der gewählten Aktion bewertet.
     \item Übergangsmodell ($P(s' \vert s, a)$): Wahrscheinlichkeiten, dass der Zustand $s'$ nach einer Aktion $a$ im Zustand $s$ entsteht.
     \item Policy ($\pi(s)$): Die Strategie des Agenten zur Auswahl von Aktionen.
 \end{itemize}
@@ -83,31 +83,19 @@ hier kommt Deep Q-Learning (DQN) ins Spiel.
 \subsection{Deep Q-Learning}
 Deep Q-Learning (DQN) erweitert Q-Learning durch den Einsatz eines neuronalen 
 Netzwerks zur Approximation der Q-Werte, anstatt eine explizite Tabelle zu 
-speichern. Dies erlaubt das Lernen in hochdimensionalen Zustandsräumen, die 
-tabellarische Methoden überfordern würden.
-Die Hauptbestandteile von DQN sind:
-\begin{enumerate}
-    \item Neuronales Netz als Q-Funktion
-        \begin{itemize}
-            \item Das Netz nimmt den Zustand $s$ als Eingabe und gibt geschätzte Q-Werte für alle möglichen Aktionen $a$ aus.
-            \item Die Gewichte des Netzwerks werden durch Gradientenabstieg und einen Mean-Squared-Error (MSE)-Loss aktualisiert.
-        \end{itemize}
-    \item Erfahrungsspeicher (Experience Replay)
-        \begin{itemize}
-            \item Anstatt direkt mit den neuesten Erfahrungen zu trainieren, werden vergangene Erfahrungen $(s,a,r,s')$ in einem Speicher abgelegt.
-        \end{itemize}
-    \item Zielnetzwerk (Target Network)
-        \begin{itemize}
-            \item Zusätzlich zum Hauptnetzwerk existiert eine separate Kopie, die in regelmäßigen Abständen aktualisiert wird.
-            \item Dies verhindert zu starke Schwankungen in den Q-Werten und stabilisiert das Training.
-        \end{itemize}
-\end{enumerate}
-Die Aktualisierungsregel für DQN basiert auf dem Mean-Squared-Error zwischen dem 
-vorhergesagten und dem Ziel-Q-Wert:
-\begin{equation}
-    L = \left(r + \gamma \max_{\alpha'}Q_{\text{target}}(s',a') - Q_{\text{current}}(s,a)\right)^2
-\end{equation}
-DQN ist besonders mächtig für komplexe Umgebungen, in denen eine tabellarische 
-Q-Funktion nicht mehr praktikabel ist.
+speichern. Das Netz nimmt den Zustand $s$ als Eingabe und gibt geschätzte Q-Werte 
+für alle möglichen Aktionen $a$ aus und die Gewichte des Netzwerks werden durch 
+Gradientenabstieg aktualisiert. Anstatt aber das Netzwerk nach jedem Ereigniss zu 
+trainieren, werden normalerweise vergangene Erfahrungen $(s,a,r,s')$ in einem 
+Speicher abgelegt, um so die Q-Werte in einem großen Schritt zu verbessern.
+Dazu wird zufällig aus diesem Speicher ein \textit{Batch} (ein Teil der Erfahrungen) 
+ausgewählt und die Q-Werte des Netzwerks aktualisiert (\textit{experience replay}).
+Zudem existiert ein Zielnetzwerk, das die Q-Werte der optimalen Strategie 
+repräsentiert und eine Kopie des originalen Netzwerks ist, welches aber seltener
+oder geringfügiger aktualisiert wird. Dies verhindert zu starke Schwankungen in den 
+Q-Werten und stabilisiert das Training.
+
+DQN ermöglicht das Lernen in hochdimensionalen Zustandsräumen, die 
+tabellarische Methoden überfordern würden. 
 
 % \section{Verwandte Arbeiten}
