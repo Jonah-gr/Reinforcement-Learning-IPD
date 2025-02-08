@@ -78,7 +78,38 @@ Für das Training und die Evaluation der RL-Agent wurden folgende Basis-Strategi
 \label{table:basestrategies}
 \end{longtable}
 
-Der Q-Learning Agent nutzt eine Q-Tabelle zur Approximation der Q-Werte.
+Der Q-Learning Agent nutzt eine $2 \times 2$ Q-Tabelle zur Approximation der Q-Werte:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c}
+            & Q-Werte für Kooperation & Q-Werte für Defektion \\
+        \hline
+        Gegner kooperierte &  Q(0, 0) & Q(0, 1) \\
+        \hline
+        Gegner defektierte &  Q(1, 0) & Q(1, 1) \\
+    \end{tabular}
+    \caption{Q-Tabelle}
+    \label{table:qtable}
+\end{table}
+Weil die Q-Tabelle nur den letzten Gegnerzug betrachtet, kann der Q-Learning Agent nur vier Strategien entwickeln:
+\begin{enumerate}
+    \item Immer kooperieren (wie \textit{AlwaysCooperateAgent}) mit
+        \begin{align*}
+            Q(0, 0) > Q(0, 1) \land Q(1, 0) > Q(1, 1)
+        \end{align*}
+    \item Immer defektieren (wie \textit{AlwaysDefectAgent}) mit
+        \begin{align*}
+            Q(0, 0) < Q(0, 1) \land Q(1, 0) < Q(1, 1)
+        \end{align*} 
+    \item Den Gegner imitieren (wie \textit{TitForTatAgent}) mit
+        \begin{align*}
+            Q(0, 0) > Q(0, 1) \land Q(1, 0) < Q(1, 1)
+        \end{align*}
+    \item Gegenteil der Imitation (wie \textit{TitForTatOppositeAgent}) mit
+        \begin{align*}
+            Q(0, 0) < Q(0, 1) \land Q(1, 0) > Q(1, 1)
+        \end{align*}
+\end{enumerate}
 Hierbei steuert die Lernrate $\alpha=0.001$, wie stark neue Informationen in die Q-Tabelle einfließen, während der 
 Discount-Faktor $\gamma=0.95$ zukünftige Belohnungen mit einbezieht. Der Agent nutzt eine $\epsilon$-greedy Strategie, 
 bei der mit Wahrscheinlichkeit $\epsilon$ eine zufällige Aktion gewählt wird, um Exploration zu ermöglichen. 
@@ -103,9 +134,8 @@ Lernprozessgestaltung und ein $\epsilon$-greedy Explorationsverfahren, bei dem d
 zunehmendem Training abnimmt ($\epsilon$ sinkt von 1.0 auf 0.00001 mit einem Faktor von 0.9995). Das Lernen erfolgt über MSE-Loss und Adam-Optimierung mit 
 einer Lernrate von 0.001.
 Während des Trainings werden zufällige 5 Batches aus der Replay-Memory gezogen und die Q-Werte 
-aktualisiert, wobei der jeweilige optimale Q-Wert (Ausgabe des Zielnetzwerks) mit $\gamma=0.95$ diskontiert wird.
-
-Die Belohnunsfunktion beider RL-Agenten ist die vorher beschriebene Auszahlungsmatrix (siehe Tab. \ref{table:auszahlungsmatrix}). \\ \\
+aktualisiert, wobei der jeweilige optimale Q-Wert (Ausgabe des Zielnetzwerks) mit $\gamma=0.95$ diskontiert wird. \\ \\
+Die Belohnunsfunktion beider RL-Agenten ist die vorher beschriebene Auszahlungsmatrix (siehe Tab. \ref{table:auszahlungsmatrix}).
 Beide RL-Agenten wurden in 10000 Episoden gegen eine zufällige aber feste Reihenfolge von Basis-Agenten trainiert.
 
 
