@@ -112,7 +112,7 @@ Make sure that the path to the model is correct.
 
 When training the `QLearningAgent(α=0.001, γ=0.95)` and `DeepQLearningAgent(state_size=20, α=0.001, γ=0.95)` (and `RandomStrategies()`) over 10000 epochs, each with a game of 100 rounds, the following results were obtained:
 
-| **Agent**            | **RandomStrategies()** | **QLearningAgent(α=0.01, γ=0.5)** | **DeepQLearningAgent(state_size=20, α=0.001, γ=0.99)**
+| **Agent**            | **RandomStrategies()** | **QLearningAgent(α=0.001, γ=0.95)** | **DeepQLearningAgent(state_size=20, α=0.001, γ=0.95)**
 |----------------------|-------------------|----------------------|-------------------|
 | **average reward per epoch** |  233  | 265 | 287 |
 

@@ -750,9 +750,7 @@ class SuspiciousSoftMajorityAgent(Agent):
 
 
 class QLearningAgent(Agent):
-    def __init__(
-        self, q_table=None, alpha=0.001, gamma=0.95, epsilon=1.0, epsilon_decay=0.9995, epsilon_min=0.00001
-    ):  ### 0.8417490325 < x < 0.841749035 bei alpha = 0.01
+    def __init__(self, q_table=None, alpha=0.001, gamma=0.95, epsilon=1.0, epsilon_decay=0.9995, epsilon_min=0.00001):
         super().__init__()
         if q_table is None:
             self.q_table = np.random.uniform(-0.1, 0.1, (2, 2))  # Q-values for (Agent_Action, Opponent_Action)
@@ -866,10 +864,7 @@ class DeepQLearningAgent(Agent):
         self.prev_actions = [0] * state_size
 
     def remember(self, state, action, reward, next_state, done):
-        self.memory.append((state, action, self.get_reward(reward), next_state, done))
-
-    def get_reward(self, reward):
-        return reward
+        self.memory.append((state, action, reward, next_state, done))
 
     def act(self, state):
         """
