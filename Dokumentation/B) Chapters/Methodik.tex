@@ -20,6 +20,7 @@ Für all diese Zwecke wurde die Rundenanzahl pro Spiel auf $n=100$ gesetzt und d
 \end{table}
 
 \section{Agenten und Strategien}
+\label{3.2}
 Für das Training und die Evaluation der RL-Agent wurden folgende Basis-Strategien implementiert:
 
 \begin{longtable}{|c|m{7cm}|}
@@ -77,6 +78,9 @@ Für das Training und die Evaluation der RL-Agent wurden folgende Basis-Strategi
 \caption{Basis-Strategien}
 \label{table:basestrategies}
 \end{longtable}
+Zusätzlich gibt es den \textit{RandomStrategies()} Agenten, der jede Epsiode  zufällig  eine Strategie aus den 
+Basis-Strategien (siehe Tab. \ref{table:basestrategies}) auswählt und so seine
+Entscheidungen trifft. \\
 
 Der Q-Learning Agent nutzt eine $2 \times 2$ Q-Tabelle zur Approximation der Q-Werte:
 \begin{table}[H]
