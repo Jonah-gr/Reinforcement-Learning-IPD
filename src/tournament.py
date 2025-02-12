@@ -13,9 +13,9 @@ class Tournament:
         if inlcude_params:
             columns = [
                 "agent_a",
-                "agent_a_state",
+                "agent_a_def",
                 "agent_b",
-                "agent_b_state",
+                "agent_b_def",
                 "total_reward_a",
                 "total_reward_b",
             ]
@@ -46,6 +46,8 @@ class Tournament:
             for agent_b in BASIC_AGENTS:
                 total_reward_a = 0
                 total_reward_b = 0
+                agent_a_def = 0
+                agent_b_def = 0
                 for _ in range(self.num_games):
                     agent_a.reset()
                     agent_b.reset()
@@ -55,12 +57,16 @@ class Tournament:
                     total_reward_a += reward_a
                     total_reward_b += reward_b
 
+                    if self.include_params:
+                        agent_a_def += sum(agent_a.__get_params__()[0])
+                        agent_b_def += sum(agent_b.__get_params__()[0])
+
                 if self.include_params:
                     self.results.loc[index] = [
                         type(agent_a).__name__,
-                        agent_a.__get_params__(),
+                        agent_a_def,
                         type(agent_b).__name__,
-                        agent_b.__get_params__(),
+                        agent_b_def,
                         total_reward_a,
                         total_reward_b,
                     ]

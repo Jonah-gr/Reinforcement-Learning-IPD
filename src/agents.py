@@ -1027,14 +1027,16 @@ class RandomStrategies(Agent):
     def reset(self):
         self.agent.reset()
         self.agent = random.choice(BASIC_AGENTS)
+        self.history = []
+        self.reward_history = []
 
 
 if __name__ == "__main__":
     # for agent in BASIC_AGENTS:
-    q_agent = DeepQLearningAgent(state_size=5, path="deep_q_100.pt")
-    game = Game(q_agent, RandomAgent(), verbose=2)
-    a, b = game.play_iterated_game(10)
-    # print(len(ALL_AGENTS))
-    # print(len(BASIC_AGENTS))
+    # q_agent = DeepQLearningAgent(state_size=5, path="deep_q_100.pt")
+    # game = Game(q_agent, RandomAgent(), verbose=2)
+    # a, b = game.play_iterated_game(10)
+    print(len(ALL_AGENTS))
+    print(len(BASIC_AGENTS))
 
     # print(q_agent.train_multiple_agents())
