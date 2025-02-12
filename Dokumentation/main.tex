@@ -1,7 +1,10 @@
 \documentclass{PHKA_inf} 
 %add the additional packages and macros that you want to use
 \input{packages_macros}
-\usepackage[round]{natbib} 
+\usepackage[style=verbose]{biblatex}
+\addbibresource{bibliography.bib}
+% \usepackage[round]{natbib} 
+% \bibliography{bibliography}
 % important update for glossaries, before document 
 \loadglsentries{C) Back Matter/acronyms.tex}
 \loadglsentries{C) Back Matter/glossary.tex} 
@@ -42,6 +45,7 @@
     \microtypesetup{protrusion=false}
     \tableofcontents{}
     \listoftables
+    \listoffigures
     % Use an optional list of tables / figures / algorithms / listings(code).
  
     \cleardoublepage{}
@@ -73,6 +77,7 @@
 	%Referenzen
     %\bibliographystyle{apalike}
 	%\bibliography{bibliography}
+    \printbibliography
 	
 	%\printglossary[type=\acronymtype]
     %\printglossary
