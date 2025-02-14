@@ -1,4 +1,26 @@
 \chapter{Diskussion}
 \section{Interpretation der Ergebnisse}
-\section{Vergleich mit Erwartungen}
+Die Ergebnisse zeigen, dass lernende Agenten wie der \textit{QLearningAgent} und insbesondere der \textit{DeepQLearningAgent} 
+langfristig erfolgreicher sind als einfache, vorab definierte Strategien. Diese Beobachtung bestätigt die Annahme, dass 
+eine adaptive Strategie vorteilhafter ist als eine statische. Dennoch gibt es verschiedene Aspekte, die näher betrachtet werden sollten.
+Wie in \ref{3.2} erklärt konnte der \textit{QLearningAgent} nur in vier Richtungen konvergieren. Das bedeutet natürlich auch, dass er nie 
+besser als die beste Basis-Strategie sein kann. Da er sich aber aber für die beste für ihn mögliche Strategie ''entschieden'' hat, zeigt 
+er das Potential langfristig gute Entscheidungen zu treffen und überlegene Strategien zu entwickeln.
+Die höhere Belohnung des \textit{DeepQLearningAgent} ist insbesondere auf seine Fähigkeit zurückzuführen, gegnerische Muster 
+zu identifizieren und entsprechend zu handeln. Allerdings wurde beobachtet, dass er in einigen Situationen ''Fehlklassifikationen''  
+vornimmt und beispielsweise gegen den \textit{AlwaysDefectAgent()} fälschlicherweise oft kooperiert. Dies deutet darauf hin,  
+dass sein Entscheidungsprozess nicht immer optimal ist und dass es Situationen gibt, in denen er durch z.B. einen zu starken Drang nach Kooperation 
+Punkte verliert.
+
+Ein zentrales Ergebnis ist, dass langfristige Kooperation gegenüber reiner Defektion überlegen ist. Dies spiegelt die grundlegenden 
+Erkenntnisse aus der Spieltheorie wider, wonach Vertrauen, Zusammenarbeit, Vergebung und Großzügigkeit langfristig zu höheren Gewinnen führen können. 
+Allerdings zeigt der \textit{DeepQLearningAgent}, dass es sich lohnen kann, Schwächen in gegnerischen Strategien gezielt auszunutzen. 
+Diese Mischung aus Kooperation und Opportunismus scheint der Schlüssel zu maximalem Erfolg zu sein.
+
 \section{Limitationen}
+Trotz der vielversprechenden Ergebnisse gibt es einige Limitationen:
+\begin{itemize}
+    \item Die Anzahl der getesteten Spiele und Strategien ist begrenzt. Eine breitere Auswahl an Strategien könnte neue Herausforderungen für die Agenten darstellen.
+    \item Die RL-Modelle basieren auf den spezifischen Hyperparametern $\alpha$, $\gamma$ und $\epsilon$. Andere Parametrisierungen oder alternative Architekturen, insbesondere im Deep-Q-Learning, könnten zu unterschiedlichen Ergebnissen führen.
+    \item Der Einfluss von mehrstufigen Gegneranalysen oder Gedächtnisstrategien wurde nicht untersucht. Ein RL-Agent mit Langzeitgedächtnis (z.B. LSTMs) könnte noch besser auf bestimmte Gegner reagieren.
+\end{itemize}
