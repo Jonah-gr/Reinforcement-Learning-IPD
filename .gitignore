@@ -11,6 +11,17 @@ runs/
 *.snm
 *.out
 *.toc
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.xml
+*.gz
+*.xmpi
 
 # Tournament
 *.csv
