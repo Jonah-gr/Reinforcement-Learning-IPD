@@ -6,7 +6,7 @@
     \begin{tabular}{c|c}
             & $\frac{\sum r}{T}$ \\
         \hline
-        QLearningAgent($\alpha$ = 0.1, $\gamma$ = 0.95)  & 265 \\
+        QLearningAgent($\alpha$ = 0.001, $\gamma$ = 0.95)  & 265 \\
         \hline
         DeepQLearningAgent($\alpha$ = 0.001, $\gamma$ = 0.95) & 287 \\
         \hline
@@ -15,10 +15,10 @@
     \caption{Trainigs-Ergebnisse}
     \label{table:trainingsergebnisse}
 \end{table}
-Es bildet sich also schon während des Trainings ab, dass der QLearning-Agent und der Deep QLearning-Agent langfristig
+Es bildet sich also schon während des Trainings ab, dass der Q-Learning-Agent und der Deep Q-Learning-Agent langfristig
 bessere Entscheidungen treffen, als der \textit{RandomStrategies} Agent. Es lohnt sich also weniger jedes Spiel
 eine zufällige etablierte Strategie zu wählen.
-Nach dem Training wurden alle Agenten und Strategien in einem Tunier getestet:
+Nach dem Training wurden alle Agenten und Strategien in einem Turnier getestet:
 \begin{figure}[H]
     \centering
     \includegraphics[height=8cm]{../poster/logos/tournament.png}
@@ -34,7 +34,7 @@ Bevor die Ergebnisse der RL-Agenten genauer analysiert werden, können einige Be
 % Diese Beobachtungen decken sich auch mit den Entdeckungen, die Robert Axelrod in seinem Buch 
 % \textit{The Evolution of Cooperation}\footcite{axelrod1984cooperation} gemacht hat.
 
-\subsection{QLearning-Ergebnisse}
+\subsection{Q-Learning-Ergebnisse}
 Aus dem Training ging folgende Q-Tabelle hervor:
 \begin{table}[H]
     \centering
@@ -49,10 +49,10 @@ Aus dem Training ging folgende Q-Tabelle hervor:
     \label{table:qtableaftertraining}
 \end{table}
 Da $Q(0, 0) > Q(0, 1) \land Q(1, 0) < Q(1, 1)$ gilt, konvergierte der Q-Learning-Agent offentsichtlich in Richtung der
-TitForTat-Strategie. Dies spiegelt sich auch in den Tunierergebnissen (siehe Abb. \ref{fig:gesamtbelohnungen}) wieder:
-Dort reiht sich der QLearning-Agent auch dort ein. Durch unterschiedliche Entscheidungen von Agenten, die auf Wahrscheinlichkeiten 
+TitForTat-Strategie. Dies spiegelt sich auch in den Turnierergebnissen (siehe Abb. \ref{fig:gesamtbelohnungen}) wieder:
+Dort reiht sich der Q-Learning-Agent auch ein. Durch unterschiedliche Entscheidungen von Agenten, die auf Wahrscheinlichkeiten 
 beruhen (\textit{RandomAgent, \textit{GenerousTitForTatAgent}}) gibt es minimale Abweichungen zwischen den Agenten.
-Wenn man diese Ergebnisse mit denen der anderen drei Strategien, die der \textit{QLearningAgent} entwickeln konnte vergleicht,
+Wenn man diese Ergebnisse mit denen der anderen drei Strategien, die der Q-Learning-Agent entwickeln konnte vergleicht,
 fällt auf, dass die TitForTat-Strategie langfristig die besten Ergebnisse erzielt. Es gilt:
 \textit{TitForTatAgent} > \textit{AlwaysCooperateAgent} > \textit{TitForTatOppositeAgent} > \textit{AlwaysDefectAgent}.
 Die Verteilung von Kooperation und Defektion des Q-Learning-Agenten ist in Abb. \ref{fig:qverteilung} dargestellt:
@@ -63,8 +63,8 @@ Die Verteilung von Kooperation und Defektion des Q-Learning-Agenten ist in Abb. 
     \label{fig:qverteilung}
 \end{figure}
 
-\subsection{Deep QLearning-Ergebnisse}
-Der Deep Q-Learning-Agent geht als Sieger des Tuniers hervor mit durschnittlich $741597 / 2400 \approx 309$ Belohnungen pro Spiel. 
+\subsection{Deep Q-Learning-Ergebnisse}
+Der Deep Q-Learning-Agent geht als Sieger des Turniers hervor mit durschnittlich $741597 / 2400 \approx 309$ Belohnungen pro Spiel. 
 Die folgende Grafik zeigt die Verteilung von Kooperation und Defektion über alle Spiele im Turnier:
 \begin{figure}[H]
     \centering
@@ -85,7 +85,7 @@ fast immer, genauso wie gegen den \textit{TitForTatOppositeAgent}, was in beiden
 seine Gegner und defektiert z.B. nur alle 2 Runden gegen den \textit{AlwaysCooperateAgent}. Gegen den \textit{AlwaysDefectAgent}
 und den \textit{SpitefulAgent} hat er jedoch Probleme und kooperiert häufig. 
 
-Insgesamt muss man anerkennen, dass ein ''perfektes'' Ergebnis nicht möglich ist. Im Verhalten des Deep Q-Learning-Agent erkennt man ebenfalls,
+Insgesamt muss man anerkennen, dass ein ''perfektes'' Ergebnis nicht möglich ist. Im Verhalten des Deep Q-Learning-Agenten erkennt man ebenfalls,
 dass er zuerst ''testet'', gegen welchen Gegner er spielt. Das ist notwenig, um die Strategie anzupassen, führt aber auch zum Verlust von Punkten.
 Beim \textit{SpitefulAgent} z.B. ist es aber schon zu spät, wenn man erkennt, dass dieser der Gegner ist. \\ \\
 Durch diese Mischung aus langfristiger Kooperation und Ausnutzen von Schwachstellen in der gegnerischen Strategie ist der 

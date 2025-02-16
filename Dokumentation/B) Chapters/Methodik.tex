@@ -1,7 +1,7 @@
 \chapter{Methodik}
 \section{Aufbau des Experiments}
 Um zu untersuchen, wie Reinforcement-Learning-Agenten im Iterierten 
-Gefangenendilemma (IPD) agieren, wurde eine experimentelle 
+Gefangenendilemma agieren, wurde eine experimentelle 
 \href{https://github.com/Jonah-gr/Reinforcement-Learning-IPD}{Python-Umgebung} implementiert. 
 Diese Umgebung ermöglicht es, Spiele zu simulieren, RL-Agenten zu trainieren, und diese dann zu evaluieren.
 Für all diese Zwecke wurde die Rundenanzahl pro Spiel auf $n=100$ gesetzt und die folgende Auszahlungsmatrix verwendet:
@@ -128,7 +128,7 @@ Schicht mit 32 Neuronen und eine Ausgabeschicht mit 2 Neuronen, die die Q-Werte 
 eine stabile Gewichtsverteilung gewährleistet. Diese sorgt dafür, dass die Gewichte so initialisiert werden, dass der 
 Informationsfluss durch das Netzwerk stabil bleibt. Die Gewichte $W$ werden so initialisiert, dass
 \begin{equation}
-    W \sim U \left( -\frac{\sqrt{6}}{\sqrt{n_{\text{in}}+n_{\text{out}}}}, \frac{6}{\sqrt{n_{\text{in}}+n_{\text{out}}}} \right)
+    W \sim U \left( -\frac{\sqrt{6}}{\sqrt{n_{\text{in}}+n_{\text{out}}}}, \frac{\sqrt{6}}{\sqrt{n_{\text{in}}+n_{\text{out}}}} \right)
 \end{equation}
 mit $n_{in}$ und $n_{out}$ als Anzahl der Neuronen der vorherigen und der aktuellen Schicht. Die Varianz der Gewichte bleibt
 also über alle Schichten hinweg konstant.\footcite{pmlr-v9-glorot10a}

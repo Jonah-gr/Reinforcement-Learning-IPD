@@ -25,18 +25,22 @@ Dabei gilt üblicherweise:
     \item 2R > T + S, sodass sich gegenseitige Kooperation langfristig mehr lohnen würde als wechselseitige Ausnutzung.
 \end{itemize}
 Im einmaligen Gefangenendilemma ist die dominante Strategie, zu defektieren, da 
-dies in jedem individuellen Fall die höhere Auszahlung sichert – unabhängig von der 
+dies in jedem individuellen Fall die höhere Auszahlung sichert -- unabhängig von der 
 Entscheidung des Gegenspielers. Dies führt jedoch zu einem sozial suboptimalen 
 Ergebnis.
 
-Im iterierten Gefangenendilemma (IPD) wird das Spiel jedoch mehrfach hintereinander 
+Im iterierten Gefangenendilemma wird das Spiel jedoch mehrfach hintereinander 
 gespielt, sodass frühere Entscheidungen zukünftige Interaktionen beeinflussen können. 
 Dadurch eröffnen sich neue Möglichkeiten für kooperative Strategien, bei denen 
 Agenten versuchen, durch wechselseitige Zusammenarbeit langfristig höhere Erträge 
 zu erzielen. Bekannte Strategien aus der Spieltheorie für das IPD sind beispielsweise:
-''Tit-for-Tat'' (Spiele das, was dein Gegner in der vorherigen Runde getan hat).
-''Always Defect'' (Immer defektieren, um kurzfristig die höchste Auszahlung zu sichern).
-''Grim Trigger'' (Kooperiere, aber falls der Gegner einmal defektiert, defektiere für immer).
+\begin{itemize}
+    \item ''Tit-for-Tat'' (Spiele das, was dein Gegner in der vorherigen Runde getan hat).
+    \item ''Always Defect'' (Immer defektieren, um kurzfristig die höchste Auszahlung zu sichern).
+\end{itemize}
+% ''Tit-for-Tat'' (Spiele das, was dein Gegner in der vorherigen Runde getan hat).
+% ''Always Defect'' (Immer defektieren, um kurzfristig die höchste Auszahlung zu sichern).
+% ''Grim Trigger'' (Kooperiere, aber falls der Gegner einmal defektiert, defektiere für immer).
 
 Die zentrale Forschungsfrage im IPD lautet daher: Ist es möglich, langfristige 
 Kooperation zu etablieren, oder führt Eigennutz immer zu gegenseitiger Defektion? 
@@ -49,7 +53,7 @@ ein Agent durch Interaktion mit einer Umgebung eine optimale Strategie erlernt.
 Der Lernprozess basiert auf einem Belohnungssystem: Der Agent führt Aktionen aus, 
 erhält daraufhin Belohnungen oder Bestrafungen und passt sein Verhalten 
 entsprechend an. RL-Probleme werden typischerweise als Markov-Entscheidungsprozesse 
-(MDP) modelliert, bestehend aus:
+modelliert, bestehend aus:
 \begin{itemize}
     \item Zustand (State, $S$): Die aktuelle Situation der Umgebung.
     \item Aktion (Action, $A$): Eine Entscheidung, die der Agent treffen kann.
@@ -77,11 +81,11 @@ Hierbei sind:
 \end{itemize}
 Da Q-Learning tabellarisch arbeitet, ist es nur für kleine Zustandsräume geeignet, 
 da die Q-Tabelle bei vielen möglichen Zuständen und Aktionen schnell zu groß wird. 
-In komplexeren Umgebungen ist daher eine neuronale Netzarchitektur notwendig - 
-hier kommt Deep Q-Learning (DQN) ins Spiel.
+In komplexeren Umgebungen ist daher eine neuronale Netzarchitektur notwendig -- 
+hier kommt Deep Q-Learning ins Spiel.
 
 \subsection{Deep Q-Learning}
-Deep Q-Learning (DQN) erweitert Q-Learning durch den Einsatz eines neuronalen 
+Deep Q-Learning erweitert Q-Learning durch den Einsatz eines neuronalen 
 Netzwerks zur Approximation der Q-Werte, anstatt eine explizite Tabelle zu 
 speichern. Das Netz nimmt den Zustand $s$ als Eingabe und gibt geschätzte Q-Werte 
 für alle möglichen Aktionen $a$ aus und die Gewichte des Netzwerks werden durch 
@@ -95,5 +99,5 @@ repräsentiert und eine Kopie des originalen Netzwerks ist, welches aber seltene
 oder geringfügiger aktualisiert wird. Dies verhindert zu starke Schwankungen in den 
 Q-Werten und stabilisiert das Training.\footcite{mnih2013playingatarideepreinforcement}
 
-DQN ermöglicht das Lernen in hochdimensionalen Zustandsräumen, die 
+Deep Q-Learning ermöglicht das Lernen in hochdimensionalen Zustandsräumen, die 
 tabellarische Methoden überfordern würden. 

@@ -104,7 +104,7 @@
 				{\scshape{\textbf{\huge \TitleSetup}\par}}
 				\vspace{1.5cm}
 				%Thesis title
-				{\TitleTitleSetup\par}
+				% {\TitleTitleSetup\par}
 				% {\LARGE \glqq \TitleValue \par}
 				
 				\vspace{1.2cm} % If title is multiple lines long change the space here
