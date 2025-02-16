@@ -138,14 +138,14 @@ Lernprozessgestaltung und ein $\epsilon$-greedy Explorationsverfahren, bei dem d
 zunehmendem Training abnimmt ($\epsilon$ sinkt von 1.0 auf 0.00001 mit einem Faktor von 0.9995). Das Lernen erfolgt über MSE-Loss und Adam-Optimierung mit 
 einer Lernrate von 0.001.
 Während des Trainings werden zufällige 5 Batches aus der Replay-Memory gezogen und die Q-Werte 
-aktualisiert, wobei der jeweilige optimale Q-Wert (Ausgabe des Zielnetzwerks) mit $\gamma=0.95$ diskontiert wird. $\gamma$ ist desehalb jeweils
-so hoch gewhält, damit die Agenten der Zielsetzung ensprechend langfristige Strategien entwickeln.\\ \\
-Die Belohnunsfunktion beider RL-Agenten ist die vorher beschriebene Auszahlungsmatrix (siehe Tab. \ref{table:auszahlungsmatrix}).
-Beide RL-Agenten wurden in 10000 Episoden gegen eine zufällige aber feste Reihenfolge von Basis-Agenten trainiert.
+aktualisiert, wobei der jeweilige optimale Q-Wert (Ausgabe des Zielnetzwerks) mit $\gamma=0.95$ diskontiert wird. $\gamma$ ist deshalb jeweils
+so hoch gewählt, damit die Agenten der Zielsetzung entsprechend langfristige Strategien entwickeln.\\ \\
+Die Belohnungsfunktion beider RL-Agenten ist die vorher beschriebene Auszahlungsmatrix (siehe Tab. \ref{table:auszahlungsmatrix}).
+Beide RL-Agenten wurden in 10000 Episoden gegen eine zufällige, aber feste Reihenfolge von Basis-Agenten trainiert.
 
 
 \section{Evaluierungsmethodik}
 Die Evaluierungsmethodik basiert auf einem Turnierformat, in dem jeder Agent gegen jeden Basis-Agenten 100 Spiele 
 absolvieren muss. Jeder Agent spielt also $24 * 100 = 2400$ Spiele (es gibt 24 Basis-Agenten) und $2400 * 100 = 240000$ Runden. 
 Am Ende werden die Gesamtbelohnungen aller Agenten über alle Spiele hinweg miteinander verglichen.
-Dieses Format stellt sicher, dass für alle Agenten die selben Voraussetzungen herrschen und statistisch signifante Ergebnisse erzielt werden.
+Dieses Format stellt sicher, dass für alle Agenten dieselben Voraussetzungen herrschen und statistisch signifikante Ergebnisse erzielt werden.

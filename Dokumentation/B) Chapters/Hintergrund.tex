@@ -89,7 +89,7 @@ Deep Q-Learning erweitert Q-Learning durch den Einsatz eines neuronalen
 Netzwerks zur Approximation der Q-Werte, anstatt eine explizite Tabelle zu 
 speichern. Das Netz nimmt den Zustand $s$ als Eingabe und gibt geschätzte Q-Werte 
 für alle möglichen Aktionen $a$ aus und die Gewichte des Netzwerks werden durch 
-Gradientenabstieg aktualisiert. Anstatt aber das Netzwerk nach jedem Ereigniss zu 
+Gradientenabstieg aktualisiert. Anstatt aber das Netzwerk nach jedem Ereignis zu 
 trainieren, werden normalerweise vergangene Erfahrungen $(s,a,r,s')$ in einem 
 Speicher abgelegt, um so die Q-Werte in einem großen Schritt zu verbessern.
 Dazu wird zufällig aus diesem Speicher ein \textit{Batch} (ein Teil der Erfahrungen) 
