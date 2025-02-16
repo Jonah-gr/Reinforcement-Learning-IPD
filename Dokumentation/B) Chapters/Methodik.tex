@@ -21,7 +21,7 @@ Für all diese Zwecke wurde die Rundenanzahl pro Spiel auf $n=100$ gesetzt und d
 
 \section{Agenten und Strategien}
 \label{3.2}
-Für das Training und die Evaluation der RL-Agent wurden folgende Basis-Strategien implementiert:
+Für das Training und die Evaluation der RL-Agent wurden folgende Basis-Strategien implementiert\footcite{axelrod1984cooperation}\footcite{stewart2012extortion}:
 
 \begin{longtable}{|c|m{7cm}|}
     \hline
@@ -131,7 +131,7 @@ Informationsfluss durch das Netzwerk stabil bleibt. Die Gewichte $W$ werden so i
     W \sim U \left( -\frac{\sqrt{6}}{\sqrt{n_{\text{in}}+n_{\text{out}}}}, \frac{6}{\sqrt{n_{\text{in}}+n_{\text{out}}}} \right)
 \end{equation}
 mit $n_{in}$ und $n_{out}$ als Anzahl der Neuronen der vorherigen und der aktuellen Schicht. Die Varianz der Gewichte bleibt
-also über alle Schichten hinweg konstant.
+also über alle Schichten hinweg konstant.\footcite{pmlr-v9-glorot10a}
 Das Netz bekommt die letzten zehn Runden, also einen 20-dimensionalen 
 Zustandsvektor, als Eingabe. Der Agent nutzt eine Replay-Memory (max. 20.000 Einträge) zur stabileren 
 Lernprozessgestaltung und ein $\epsilon$-greedy Explorationsverfahren, bei dem die Wahrscheinlichkeit für zufällige Aktionen mit 

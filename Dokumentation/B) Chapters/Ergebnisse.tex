@@ -31,8 +31,8 @@ Bevor die Ergebnisse der RL-Agenten genauer analysiert werden, können einige Be
     \item Die beste Basis-Strategie ist \textit{GenerousTitForTat}.
     \item Immer zu kooperieren ist besser als immer zu defektieren.
 \end{itemize}
-Diese Beobachtungen decken sich auch mit den Entdeckungen, die Robert Axelrod in seinem Buch 
-\textit{The Evolution of Cooperation}\footcite{axelrod1984cooperation} gemacht hat.
+% Diese Beobachtungen decken sich auch mit den Entdeckungen, die Robert Axelrod in seinem Buch 
+% \textit{The Evolution of Cooperation}\footcite{axelrod1984cooperation} gemacht hat.
 
 \subsection{QLearning-Ergebnisse}
 Aus dem Training ging folgende Q-Tabelle hervor:
@@ -48,8 +48,8 @@ Aus dem Training ging folgende Q-Tabelle hervor:
     \caption{Q-Tabelle nach dem Training}
     \label{table:qtableaftertraining}
 \end{table}
-Da $Q(0, 0) > Q(0, 1) \land Q(1, 0) < Q(1, 1)$ gilt, konvergierte der Q-Learning-Agent offentsichtlich in Richtung des
-\textit{TitForTatAgent}'s. Dies spiegelt sich auch in den Tunierergebnissen (siehe Abb. \ref{fig:gesamtbelohnungen}) wieder:
+Da $Q(0, 0) > Q(0, 1) \land Q(1, 0) < Q(1, 1)$ gilt, konvergierte der Q-Learning-Agent offentsichtlich in Richtung der
+TitForTat-Strategie. Dies spiegelt sich auch in den Tunierergebnissen (siehe Abb. \ref{fig:gesamtbelohnungen}) wieder:
 Dort reiht sich der QLearning-Agent auch dort ein. Durch unterschiedliche Entscheidungen von Agenten, die auf Wahrscheinlichkeiten 
 beruhen (\textit{RandomAgent, \textit{GenerousTitForTatAgent}}) gibt es minimale Abweichungen zwischen den Agenten.
 Wenn man diese Ergebnisse mit denen der anderen drei Strategien, die der \textit{QLearningAgent} entwickeln konnte vergleicht,

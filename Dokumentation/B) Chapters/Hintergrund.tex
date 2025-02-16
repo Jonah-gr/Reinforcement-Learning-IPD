@@ -2,7 +2,7 @@
 \section{Das Iterierter Gefangenendilemma}
 Das Gefangenendilemma ist eines der bekanntesten Probleme der Spieltheorie und 
 beschreibt eine Situation, in der zwei Spieler unabhängig voneinander entscheiden 
-müssen, ob sie kooperieren oder defektieren. Die Auszahlung für jeden Spieler hängt 
+müssen, ob sie kooperieren oder defektieren.\footcite{fudenberg1991gametheory} Die Auszahlung für jeden Spieler hängt 
 sowohl von der eigenen Entscheidung als auch von der des Gegenübers ab. 
 Die klassische Auszahlungsmatrix sieht dabei folgendermaßen aus:
 
@@ -41,7 +41,7 @@ zu erzielen. Bekannte Strategien aus der Spieltheorie für das IPD sind beispiel
 Die zentrale Forschungsfrage im IPD lautet daher: Ist es möglich, langfristige 
 Kooperation zu etablieren, oder führt Eigennutz immer zu gegenseitiger Defektion? 
 Diese Fragestellung ist besonders relevant für Reinforcement Learning-Agenten, da 
-sie ihre Strategie durch wiederholte Interaktion und Belohnungsmechanismen erlernen.
+sie ihre Strategie durch wiederholte Interaktion und Belohnungsmechanismen erlernen.\footcite{axelrod1984cooperation}
 
 \section{Reinforcement Learning}
 Reinforcement Learning (RL) ist ein Teilbereich des maschinellen Lernens, bei dem 
@@ -57,7 +57,7 @@ entsprechend an. RL-Probleme werden typischerweise als Markov-Entscheidungsproze
     \item Übergangsmodell ($P(s' \vert s, a)$): Wahrscheinlichkeiten, dass der Zustand $s'$ nach einer Aktion $a$ im Zustand $s$ entsteht.
     \item Policy ($\pi(s)$): Die Strategie des Agenten zur Auswahl von Aktionen.
 \end{itemize}
-Das Ziel ist es, eine Optimale Policy $\pi^*$ zu lernen, die die kumulierte zukünftige Belohnung maximiert. 
+Das Ziel ist es, eine Optimale Policy $\pi^*$ zu lernen, die die kumulierte zukünftige Belohnung maximiert.\footcite{sutton2018reinforcement} 
 Dafür gibt es verschiedene Methoden, darunter Q-Learning und Deep Q-Learning.
 
 \subsection{Q-Learning}
@@ -65,7 +65,7 @@ Q-Learning ist ein wertbasierter RL-Algorithmus, der darauf abzielt, die Q-Werte
 für jede Zustands-Aktions-Kombination zu erlernen. Der Q-Wert $Q(s,a)$ repräsentiert 
 die erwartete zukünftige Belohnung, wenn der Agent in Zustand $s$ Aktion $a$ wählt 
 und danach der optimalen Strategie folgt.
-Die Aktualisierung der Q-Werte erfolgt iterativ mit der Bellman-Gleichung:
+Die Aktualisierung der Q-Werte erfolgt iterativ mit der Bellman-Gleichung\footcite{qlearning}:
 \begin{equation}
     Q(s,a) \leftarrow Q(s,a) + \alpha (r + \gamma \max_{a'}Q(s',a') - Q(s,a))
 \end{equation}
@@ -93,7 +93,7 @@ ausgewählt und die Q-Werte des Netzwerks aktualisiert (\textit{experience repla
 Zudem existiert ein Zielnetzwerk, das die Q-Werte der optimalen Strategie 
 repräsentiert und eine Kopie des originalen Netzwerks ist, welches aber seltener
 oder geringfügiger aktualisiert wird. Dies verhindert zu starke Schwankungen in den 
-Q-Werten und stabilisiert das Training.
+Q-Werten und stabilisiert das Training.\footcite{mnih2013playingatarideepreinforcement}
 
 DQN ermöglicht das Lernen in hochdimensionalen Zustandsräumen, die 
 tabellarische Methoden überfordern würden. 
